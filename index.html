@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>פקיל: בונים מחשב, בלי עוקץ</title>
-<meta name="description" content="פקיל: בונים מחשב בקלות, משווים מחירים בין חנויות בישראל, ומבינים כל חלק בעברית פשוטה. חינם, בלי פרסומות ובלי עמלות.">
+<title>KisPC: מחשב לכל כיס</title>
+<meta name="description" content="KisPC: בונים מחשב בקלות, משווים מחירים בין חנויות בישראל, ומבינים כל חלק בעברית פשוטה. חינם, בלי פרסומות ובלי עמלות.">
 <meta name="theme-color" content="#FF6D00">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icons/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="פקיל">
-<meta property="og:title" content="פקיל: בונים מחשב, בלי עוקץ">
+<meta name="apple-mobile-web-app-title" content="KisPC">
+<meta property="og:title" content="KisPC: מחשב לכל כיס">
 <meta property="og:description" content="בונים מחשב, משווים מחירים בין חנויות, ומבינים כל חלק בעברית פשוטה. חינם, בלי פרסומות.">
 <meta property="og:image" content="icons/icon-512.png">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Amatic+SC:wght@700&display=swap">
@@ -58,7 +58,7 @@ a{color:var(--pen)}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);border-top:4px solid var(--brand);margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-left,0px))}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:22px;letter-spacing:-.3px}
-.brand small{font-size:12px;font-weight:700;border:1.5px solid var(--ink);border-radius:3px;padding:0 5px;letter-spacing:1px}
+.brand small{font-size:17px;font-weight:800;background:var(--ink);color:var(--paper);border-radius:4px;padding:0 5px;margin-left:1px;line-height:1.25}
 .tagline{font-size:13px;color:var(--muted)}
 .dot{width:11px;height:11px;background:var(--brand);border-radius:2px;display:inline-block;transform:rotate(45deg)}
 .theme-btn{border:1.5px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 12px;min-height:40px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px}
@@ -186,8 +186,8 @@ textarea{resize:vertical;min-height:130px}
 <header class="top">
   <div class="wrap">
     <div style="display:flex;flex-direction:column">
-      <div class="brand"><span class="dot" aria-hidden="true"></span>פקיל <small dir="ltr">PCIL</small></div>
-      <div class="tagline">מחשבים, בלי עוקץ</div>
+      <div class="brand" dir="ltr"><span class="dot" aria-hidden="true"></span>Kis<small>PC</small></div>
+      <div class="tagline">מחשב לכל כיס</div>
     </div>
     <div class="row" style="flex-wrap:nowrap;gap:6px">
     <button type="button" class="theme-btn" id="open-glossary">מילון</button>
@@ -319,10 +319,10 @@ textarea{resize:vertical;min-height:130px}
 
   <section id="v-about" aria-labelledby="h-about" hidden>
     <h1 id="h-about">מי אנחנו, ומה חשוב לדעת</h1>
-    <p class="lead">פקיל הוא אתר חינמי שעוזר לבנות מחשב בלי שיעבדו עליכם. אין לנו מה למכור לכם.</p>
+    <p class="lead">KisPC הוא אתר חינמי שעוזר לבנות מחשב בלי שיעבדו עליכם. אין לנו מה למכור לכם.</p>
     <div class="about">
-      <h2>מי עומד מאחורי פקיל</h2>
-      <p>פקיל הוקם על ידי מור משה, כפרויקט אישי וחינמי. אין לפקיל קשר עסקי לאף חנות. אף חנות לא משלמת לנו, ואנחנו לא מקבלים עמלה על קנייה. סדר המחירים נקבע רק לפי המחיר.</p>
+      <h2>מי עומד מאחורי KisPC</h2>
+      <p>KisPC הוקם על ידי מור משה, כפרויקט אישי וחינמי. אין ל-KisPC קשר עסקי לאף חנות. אף חנות לא משלמת לנו, ואנחנו לא מקבלים עמלה על קנייה. סדר המחירים נקבע רק לפי המחיר.</p>
       <h2>מאיפה המחירים</h2>
       <p>כל בוקר אנחנו בודקים את דף המוצר של כל חלק באתר החנות, ושומרים את המחיר שמופיע שם. ליד כל מחיר כתוב מתי הוא נבדק. כרגע יש מחירים מ-TMS, STO מחשבים ו-King Games. חנויות שלא מאפשרות לקרוא את האתר שלהן לא מופיעות, עד שיתנו אישור.</p>
       <p><b>המחיר הקובע הוא תמיד המחיר באתר החנות.</b> מחירים משתנים במהלך היום, ויכולות להיות טעויות. לפני שקונים, בדקו בדף המוצר את המחיר, את המלאי ואת האחריות.</p>
@@ -331,7 +331,7 @@ textarea{resize:vertical;min-height:130px}
       <h2>פרטיות</h2>
       <p>אין הרשמה ואין חשבונות. מה שבוחרים באתר נשמר רק בדפדפן שלכם. קישור שיתוף מכיל את המחשב שבחרתם, ולא שום פרט אישי. אנחנו לא משתמשים בעוגיות מעקב ולא אוספים נתוני גלישה. האתר מאוחסן ב-GitHub Pages והגופנים נטענים מ-Google Fonts, ולכן השירותים האלה עשויים לראות את כתובת ה-IP שלכם, כמו בכל אתר.</p>
       <h2>נגישות</h2>
-      <p>אנחנו רוצים שכל אחד יוכל להשתמש בפקיל. מה שעשינו: אפשר להשתמש בכל האתר עם מקלדת בלבד, הכפתורים מסומנים לקוראי מסך, יש מצב כהה וניגודיות גבוהה, והטקסט מתאים להגדלה בדפדפן. עוד לא עשינו בדיקת נגישות מלאה על ידי מומחה. נתקלתם בבעיה? כתבו לנו ונתקן.</p>
+      <p>אנחנו רוצים שכל אחד יוכל להשתמש ב-KisPC. מה שעשינו: אפשר להשתמש בכל האתר עם מקלדת בלבד, הכפתורים מסומנים לקוראי מסך, יש מצב כהה וניגודיות גבוהה, והטקסט מתאים להגדלה בדפדפן. עוד לא עשינו בדיקת נגישות מלאה על ידי מומחה. נתקלתם בבעיה? כתבו לנו ונתקן.</p>
       <h2>יצירת קשר</h2>
       <p>טעות במחיר, חנות שרוצה להצטרף, בעיית נגישות או סתם רעיון: <a href="mailto:pciladd@gmail.com">pciladd@gmail.com</a></p>
     </div>
@@ -359,11 +359,11 @@ textarea{resize:vertical;min-height:130px}
 
   <section id="v-admin" aria-labelledby="h-admin" hidden>
     <h1 id="h-admin">מחירים</h1>
-    <p class="lead">רק אתה רואה את הלשונית הזו. מה שתשמור כאן יופיע לכל מי שפותח את פקיל, עם תאריך העדכון.</p>
+    <p class="lead">רק אתה רואה את הלשונית הזו. מה שתשמור כאן יופיע לכל מי שפותח את KisPC, עם תאריך העדכון.</p>
     <div id="admin-list"></div>
   </section>
 
-  <p class="trust">פקיל חינמי לגמרי. בלי פרסומות, בלי עמלות מחנויות. ליד כל מחיר כתוב מתי הוא נבדק. המחיר הקובע הוא המחיר בחנות. <button type="button" class="linkbtn" id="open-about" style="min-height:0;padding:0">מי אנחנו, פרטיות ונגישות</button></p>
+  <p class="trust">KisPC חינמי לגמרי. בלי פרסומות, בלי עמלות מחנויות. ליד כל מחיר כתוב מתי הוא נבדק. המחיר הקובע הוא המחיר בחנות. <button type="button" class="linkbtn" id="open-about" style="min-height:0;padding:0">מי אנחנו, פרטיות ונגישות</button></p>
 </main>
 
 <nav class="tabs" aria-label="ניווט">
@@ -797,7 +797,7 @@ function renderGuide(){
 function renderBuild(){ renderUse(); renderParts(); renderChecks(); renderTotal(); renderAssembly(); document.getElementById("eilat").checked=S.eilat; document.getElementById("abroad").checked=S.abroad; }
 
 function buildText(){
-  var lines = ["המחשב שבניתי בפקיל:"];
+  var lines = ["המחשב שבניתי ב-KisPC:"];
   activeKinds().forEach(function(kd){ var p=part(kd.k), c=chosen(kd.k); lines.push(kd.name+": "+(c? c.model+" ("+money(c.price)+" "+inStore(c.store.name)+")" : p.name)); });
   var t=document.getElementById("total").textContent; if(t!=="—") lines.push("סה\"כ: "+t+(S.eilat?" (מחירי אילת)":""));
   var a = ASSEMBLY.filter(function(x){return x.id===S.asm;})[0]; if(a) lines.push("הרכבה: "+a.name);
@@ -834,7 +834,7 @@ document.getElementById("share").addEventListener("click", async function(){
   var msg=document.getElementById("copy-msg");
   if(!db){
     var hl = location.origin + location.pathname + shareHash();
-    if(navigator.share){ try{ await navigator.share({title:"המחשב שלי בפקיל", text:"תראו את המחשב שבניתי:", url:hl}); msg.textContent=""; return; }catch(err){ if(err && err.name==="AbortError") return; } }
+    if(navigator.share){ try{ await navigator.share({title:"המחשב שלי ב-KisPC", text:"תראו את המחשב שבניתי:", url:hl}); msg.textContent=""; return; }catch(err){ if(err && err.name==="AbortError") return; } }
     copyText(hl, msg, "הקישור הועתק. אפשר להדביק בוואטסאפ.");
     return;
   }
@@ -844,7 +844,7 @@ document.getElementById("share").addEventListener("click", async function(){
     var ref = db.doc("shared/"+sid);
     await ref.set({build:S.build, picks:S.picks, mode:S.mode, use:S.use, level:S.level, eilat:S.eilat, periph:S.periph, asm:S.asm, createdAt:new Date().toISOString()});
     var link = ART_URL+"#b"+sid;
-    copyText(link, msg, "הקישור הועתק: "+link+" (מי שמקבל צריך גישה לפקיל)");
+    copyText(link, msg, "הקישור הועתק: "+link+" (מי שמקבל צריך גישה ל-KisPC)");
   }catch(err){ msg.textContent="לא הצלחתי ליצור קישור. אפשר להעתיק כטקסט."; }
 });
 document.getElementById("alert-save").addEventListener("click", async function(){
@@ -897,7 +897,7 @@ function catalogBrief(){
   return Object.keys(CAT).map(function(k){ return k+": "+CAT[k].map(function(p){ var o=isFree(k,p.id)?[]:offers(k,p.id); return p.name+(o.length?" (הזול: "+o[0].model+" "+money(o[0].price)+" "+inStore(o[0].store.name)+")":""); }).join("; "); }).join("\n");
 }
 function buildBrief(){ return activeKinds().map(function(kd){ var c=chosen(kd.k); return kd.name+": "+(c? c.model+" "+money(c.price) : part(kd.k).name); }).join("\n"); }
-var RULES = "אתה היועץ של פקיל, אתר חינמי בעברית שעוזר לאנשים בלי ידע טכני לקנות מחשב בלי שיעבדו עליהם. כתוב בעברית פשוטה, קצר, בלי מונחים מיותרים, כמו חבר שמבין במחשבים. כשאתה משתמש במונח טכני, הסבר אותו במילים פשוטות. אל תמציא מחירים: השתמש רק במחירים שמופיעים במידע למטה, ואם אין מחיר, אמור שאין לך מחיר עדכני. אל תשתמש בכוכביות, בכותרות או בעיצוב Markdown; טקסט רגיל בלבד, שורה לכל נקודה.";
+var RULES = "אתה היועץ של KisPC, אתר חינמי בעברית שעוזר לאנשים בלי ידע טכני לקנות מחשב בלי שיעבדו עליהם. כתוב בעברית פשוטה, קצר, בלי מונחים מיותרים, כמו חבר שמבין במחשבים. כשאתה משתמש במונח טכני, הסבר אותו במילים פשוטות. אל תמציא מחירים: השתמש רק במחירים שמופיעים במידע למטה, ואם אין מחיר, אמור שאין לך מחיר עדכני. אל תשתמש בכוכביות, בכותרות או בעיצוב Markdown; טקסט רגיל בלבד, שורה לכל נקודה.";
 function hideAI(){ ["check-off","ask-off"].forEach(function(id){ document.getElementById(id).hidden=false; }); document.getElementById("ask-form").hidden=true; document.getElementById("img-row").hidden=true; }
 var offerImg = null;
 document.getElementById("offer-img").addEventListener("change", function(e){
