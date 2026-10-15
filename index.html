@@ -1,0 +1,1056 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>פקיל: בונים מחשב, בלי עוקץ</title>
+<meta name="description" content="פקיל: בונים מחשב בקלות, משווים מחירים בין חנויות בישראל, ומבינים כל חלק בעברית פשוטה. חינם, בלי פרסומות ובלי עמלות.">
+<meta name="theme-color" content="#FF6D00">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="פקיל">
+<meta property="og:title" content="פקיל: בונים מחשב, בלי עוקץ">
+<meta property="og:description" content="בונים מחשב, משווים מחירים בין חנויות, ומבינים כל חלק בעברית פשוטה. חינם, בלי פרסומות.">
+<meta property="og:image" content="icons/icon-512.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Assistant:wght@400;600;700;800&family=Amatic+SC:wght@700&display=swap">
+<style>
+/* Layout: one column phone app, sticky brand bar, bottom tab bar; paper white + ink, yellow highlighter, blue pen notes */
+:root{
+  --paper:#FFFFFF; --ink:#222222; --ink-2:#3C3C3C; --muted:#5E5E5E; --line:#E3E3E0; --wash:#F5F5F2;
+  --marker:#FFBF17; --marker-soft:#FFF1C9; --pen:#1D4ED8; --red:#C8102E; --good:#1B7A3D; --brand:#FF6D00;
+  --font-body:"Assistant",Arial,"Segoe UI",sans-serif; --font-hand:"Amatic SC","Assistant",cursive;
+}
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){
+  --paper:#18191B; --ink:#EDEDEA; --ink-2:#D2D2CE; --muted:#A3A3A0; --line:#34363A; --wash:#202225;
+  --marker:#FFBF17; --marker-soft:#3A2F12; --pen:#8DB0FF; --red:#FF7A8A; --good:#6FD08F; --brand:#FF8A33; color-scheme:dark } }
+:root[data-theme="dark"]{
+  --paper:#18191B; --ink:#EDEDEA; --ink-2:#D2D2CE; --muted:#A3A3A0; --line:#34363A; --wash:#202225;
+  --marker:#FFBF17; --marker-soft:#3A2F12; --pen:#8DB0FF; --red:#FF7A8A; --good:#6FD08F; --brand:#FF8A33; color-scheme:dark }
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body.static{padding-bottom:24px}
+.static .tabs{display:none}
+.static .pricebar{bottom:calc(12px + env(safe-area-inset-bottom,0px))}
+.level em{font-style:normal;font-size:13px;font-weight:800;color:var(--ink);margin-top:2px}
+.more-prefs{border:1px solid var(--line);border-radius:8px;padding:2px 12px}
+.more-prefs summary{cursor:pointer;font-weight:700;font-size:15px;min-height:44px;display:flex;align-items:center;color:var(--pen)}
+.more-prefs[open]{padding-bottom:12px}
+.more-prefs .row{margin-top:8px}
+.pricebar{position:sticky;bottom:calc(74px + env(safe-area-inset-bottom,0px));z-index:4;margin-top:14px;background:var(--ink);color:var(--paper);border-radius:8px;padding:8px 14px;display:flex;justify-content:space-between;align-items:center;gap:10px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.pricebar b{font-size:20px;font-variant-numeric:tabular-nums}
+.pricebar button{background:var(--marker);color:#222;border:0;border-radius:6px;padding:8px 12px;font-weight:800;min-height:40px;cursor:pointer}
+.buy{border:1px solid var(--line);border-radius:6px}
+.buy-head{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;background:var(--wash);border-bottom:1px solid var(--line)}
+.buy ul{list-style:none;margin:0;padding:0}
+.buy li{display:flex;justify-content:space-between;gap:10px;padding:7px 10px;border-bottom:1px solid var(--line);font-size:14px}
+.buy li:last-child{border-bottom:0}
+.buy li span{min-width:0}
+.buy li a{flex-shrink:0;font-weight:700}
+html{height:100%}
+body{background:var(--paper);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.55;direction:rtl;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 96px}
+button,input,textarea,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--pen);outline-offset:2px}
+a{color:var(--pen)}
+.wrap{max-width:720px;margin:0 auto}
+.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);border-top:4px solid var(--brand);margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-left,0px))}
+.top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:22px;letter-spacing:-.3px}
+.brand small{font-size:12px;font-weight:700;border:1.5px solid var(--ink);border-radius:3px;padding:0 5px;letter-spacing:1px}
+.tagline{font-size:13px;color:var(--muted)}
+.dot{width:11px;height:11px;background:var(--brand);border-radius:2px;display:inline-block;transform:rotate(45deg)}
+.theme-btn{border:1.5px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 12px;min-height:40px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px}
+.theme-btn svg{width:18px;height:18px}
+.prefs{margin-top:14px;display:flex;flex-direction:column;gap:10px}
+.seg{display:inline-flex;border:2px solid var(--ink);border-radius:6px;overflow:hidden}
+.seg button{border:0;background:var(--paper);padding:7px 13px;min-height:40px;font-weight:600;cursor:pointer}
+.seg button+button{border-right:1px solid var(--line)}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--paper);font-weight:800}
+.reco{font-size:14px;color:var(--ink-2);border-right:3px solid var(--brand);padding:2px 10px 2px 0}
+.again{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;flex-wrap:wrap}
+.again-btn{background:var(--paper);border:2px solid var(--brand);color:var(--ink);border-radius:6px;padding:10px 16px;min-height:46px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px}
+.again-btn svg{width:18px;height:18px;color:var(--brand)}
+.variant-note{font-size:14px;color:var(--ink-2)}
+.models{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:6px;margin-top:4px}
+.model{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid var(--line);background:var(--paper);text-align:right;cursor:pointer;width:100%;border-left:0;border-right:0;border-top:0;min-height:52px}
+.model:last-child{border-bottom:0}
+.model[aria-pressed="true"]{background:var(--marker-soft);box-shadow:inset -3px 0 0 var(--brand)}
+.model .m-name{font-weight:700;font-size:15px;display:block}
+.model .m-sub{font-size:12px;color:var(--muted);display:block}
+.model b{font-variant-numeric:tabular-nums;flex-shrink:0}
+.store-at{font-size:13px;color:var(--ink-2)}
+.assembly{display:flex;flex-direction:column;gap:8px}
+.asm{border:2px solid var(--line);border-radius:8px;padding:12px;background:var(--paper);text-align:right;cursor:pointer;display:flex;flex-direction:column;gap:3px}
+.asm[aria-pressed="true"]{border-color:var(--ink);background:var(--marker-soft)}
+.asm b{font-size:16px}.asm span{font-size:14px;color:var(--ink-2)}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+.pick-img{border:2px dashed var(--muted);border-radius:6px;padding:10px 14px;cursor:pointer;font-weight:700;min-height:44px;display:inline-flex;align-items:center}
+#offer-img:focus-visible + .small, .pick-img:focus-within{outline:3px solid var(--pen)}
+.terms{display:flex;flex-wrap:wrap;gap:6px}
+.term{border:1px solid var(--line);background:var(--wash);border-radius:999px;padding:2px 10px;font-size:13px;cursor:pointer;min-height:30px;color:var(--ink)}
+.term[aria-expanded="true"]{border-color:var(--pen);color:var(--pen)}
+.term-def{font-size:14px;color:var(--ink-2);background:var(--wash);border-radius:6px;padding:8px 10px}
+.trend{font-size:12px;font-weight:700}
+.trend.down{color:var(--good)}.trend.up{color:var(--red)}
+.alert-box{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:12px}
+.gl-item{padding:10px 0;border-bottom:1px solid var(--line)}
+.gl-item b{display:block;font-size:16px}
+.gl-item span{font-size:15px;color:var(--ink-2)}
+.steps{margin:8px 0 0;padding:0 22px 0 0;display:flex;flex-direction:column;gap:12px}
+.steps li b{display:block}
+.steps li span{font-size:15px;color:var(--ink-2)}
+.steps li a{font-size:14px}
+h1{font-size:30px;line-height:1.12;margin:22px 0 6px;font-weight:800;letter-spacing:-.5px;text-wrap:balance}
+h2{font-size:20px;line-height:1.2;margin:0;font-weight:800;text-wrap:balance}
+.lead{margin:0 0 16px;color:var(--ink-2)}
+.hand{font-family:var(--font-hand);font-size:26px;line-height:1.1;color:var(--pen)}
+.row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{border:2px solid var(--line);background:var(--paper);border-radius:999px;padding:8px 15px;min-height:44px;font-weight:600;cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--paper);border-color:var(--ink);font-weight:700}
+.label{font-weight:700;font-size:15px;margin-left:4px}
+.block{margin-top:18px}
+.levels{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.level{border:2px solid var(--line);background:var(--paper);border-radius:8px;padding:10px 12px;text-align:right;cursor:pointer;min-height:64px;display:flex;flex-direction:column;gap:2px}
+.level b{font-size:16px}.level span{font-size:13px;color:var(--muted);line-height:1.35}
+.level[aria-pressed="true"]{border-color:var(--ink);background:var(--marker-soft)}
+.parts{border:1px solid var(--line);border-radius:8px;margin-top:16px}
+.part{padding:14px;border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:6px}
+.part:last-child{border-bottom:0}
+.part-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.kind{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kind b{font-size:17px}
+.tag{font-size:12px;font-weight:700;border-radius:3px;padding:1px 7px;background:var(--ink);color:var(--paper)}
+.tag.opt{background:transparent;color:var(--ink-2);border:1px solid var(--muted)}
+.plain{font-size:14px;color:var(--muted)}
+.pick{font-weight:700}
+.why{font-size:14px;color:var(--ink-2);margin:0}
+.price{text-align:left;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:1px}
+.price b{font-size:18px;font-variant-numeric:tabular-nums}
+.price span{font-size:12px;color:var(--muted)}
+.linkbtn{background:none;border:0;padding:6px 0;color:var(--pen);font-weight:600;cursor:pointer;text-decoration:underline;text-underline-offset:3px;min-height:36px}
+.alts{display:flex;flex-direction:column;gap:6px;margin-top:4px}
+.alt{border:1px solid var(--line);border-radius:6px;padding:10px;text-align:right;background:var(--wash);cursor:pointer;display:flex;flex-direction:column;gap:2px}
+.alt[disabled]{opacity:.6;cursor:not-allowed}
+.alt small{font-size:13px;color:var(--muted)}
+.alt .bad{color:var(--red)}
+.stores{display:flex;flex-direction:column;border:1px solid var(--line);border-radius:6px;margin-top:4px}
+.store{display:flex;justify-content:space-between;gap:10px;padding:8px 10px;border-bottom:1px solid var(--line);font-size:15px}
+.store:last-child{border-bottom:0}
+.store.best{background:var(--marker-soft)}
+.store b{font-variant-numeric:tabular-nums}
+.checks{margin-top:16px;border-top:2px solid var(--ink);padding-top:12px;display:flex;flex-direction:column;gap:6px}
+.check{display:flex;gap:8px;font-size:15px}
+.check i{font-style:normal;font-weight:800;width:18px;flex-shrink:0}
+.ok i{color:var(--good)}.no i{color:var(--red)}.no{color:var(--red)}
+.summary{margin-top:18px;border:2px solid var(--ink);border-radius:8px;padding:16px;display:flex;flex-direction:column;gap:12px}
+.total{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.total b{font-size:28px;font-variant-numeric:tabular-nums}
+.note{font-size:14px;color:var(--ink-2);background:var(--marker-soft);padding:8px 10px;border-radius:4px}
+.toggle{display:flex;gap:10px;align-items:flex-start}
+.toggle input{width:22px;height:22px;margin:2px 0 0;accent-color:var(--ink);flex-shrink:0}
+.toggle label{font-size:15px;line-height:1.4}
+.toggle small{display:block;color:var(--muted);font-size:13px}
+.btn{background:var(--marker);color:#222222;border:2px solid var(--ink);border-radius:6px;padding:12px 18px;font-weight:800;font-size:17px;min-height:50px;cursor:pointer}
+.btn.dark{background:var(--ink);color:var(--paper)}
+.btn[disabled]{opacity:.6;cursor:wait}
+.small{font-size:13px;color:var(--muted)}
+textarea,.input{width:100%;border:2px solid var(--ink);border-radius:6px;padding:12px;background:var(--paper);font-size:16px}
+textarea{resize:vertical;min-height:130px}
+.answer{white-space:pre-wrap;border-right:3px solid var(--pen);padding:4px 12px 4px 0;margin-top:14px;color:var(--ink)}
+.chat{display:flex;flex-direction:column;gap:10px;margin-top:12px}
+.msg{padding:10px 12px;border-radius:8px;white-space:pre-wrap;max-width:92%}
+.msg.me{background:var(--wash);align-self:flex-start;border:1px solid var(--line)}
+.msg.ai{border-right:3px solid var(--pen);align-self:flex-end;border-radius:0;padding-left:0}
+.suggest{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.suggest button{border:1px dashed var(--muted);background:transparent;border-radius:999px;padding:6px 12px;font-size:14px;cursor:pointer;min-height:36px}
+.admin-part{border-bottom:1px solid var(--line);padding:12px 0}
+.admin-grid{display:grid;grid-template-columns:70px repeat(2,minmax(0,1fr));gap:6px;align-items:center;margin-top:8px;font-size:14px}
+.admin-grid input{border:1px solid var(--muted);border-radius:4px;padding:8px;width:100%;background:var(--paper);min-width:0}
+.tabs{position:fixed;bottom:0;left:0;right:0;z-index:6;background:var(--paper);border-top:1px solid var(--line);
+  padding:6px max(8px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(8px,env(safe-area-inset-left,0px))}
+.tabs .wrap{display:flex;justify-content:space-around;gap:4px}
+.tab{flex:1;background:none;border:0;padding:8px 4px;min-height:52px;font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;border-radius:6px}
+.tab svg{width:22px;height:22px}
+.tab[aria-selected="true"]{color:var(--ink);font-weight:800;background:var(--marker-soft);box-shadow:inset 0 3px 0 var(--brand)}
+.empty{padding:14px;border:1px dashed var(--muted);border-radius:8px;color:var(--ink-2);font-size:15px;margin-top:12px}
+.trust{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-size:14px;color:var(--muted)}
+@media (prefers-reduced-motion: reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+
+
+<header class="top">
+  <div class="wrap">
+    <div style="display:flex;flex-direction:column">
+      <div class="brand"><span class="dot" aria-hidden="true"></span>פקיל <small dir="ltr">PCIL</small></div>
+      <div class="tagline">מחשבים, בלי עוקץ</div>
+    </div>
+    <div class="row" style="flex-wrap:nowrap;gap:6px">
+    <button type="button" class="theme-btn" id="open-glossary">מילון</button>
+    <button type="button" class="theme-btn" id="theme" aria-label="מצב תצוגה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"></path></svg><span id="theme-label">אוטומטי</span></button>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section id="v-build" aria-labelledby="h-build">
+    <div id="shared-banner" class="note" hidden style="margin-top:16px"></div>
+    <h1 id="h-build">בנה מחשב</h1>
+    <p class="lead">בוחרים בשביל מה המחשב וכמה להשקיע. אנחנו מרכיבים, בודקים שהכל מתאים, ומסבירים כל חלק בעברית פשוטה.</p>
+
+    <div class="row" role="group" aria-label="בשביל מה המחשב">
+      <span class="label">בשביל מה?</span>
+      <button class="chip" data-use="game" type="button">גיימינג</button>
+      <button class="chip" data-use="study" type="button">לימודים ועבודה</button>
+      <button class="chip" data-use="edit" type="button">עריכת וידאו</button>
+    </div>
+
+    <div class="block">
+      <div class="label" id="lvl-label">כמה להשקיע?</div>
+      <div class="levels" role="group" aria-labelledby="lvl-label" id="levels"></div>
+      <p class="small" style="margin:6px 0 0">לא בטוחים? "מאוזן" מתאים לרוב האנשים. המחירים בערך, לפי היום.</p>
+    </div>
+
+    <div class="prefs">
+      <div class="toggle"><input type="checkbox" id="periph"><label for="periph"><b>צריך גם מסך, מקלדת ועכבר</b><small>סמנו אם אין לכם בבית. נוסיף אותם לרשימה ולמחיר.</small></label></div>
+      <details class="more-prefs" id="more-prefs"><summary>יש לכם העדפה ליצרן? (לא חובה)</summary>
+      <div class="row"><span class="label" id="gpu-pref-l">כרטיס מסך:</span>
+        <div class="seg" role="group" aria-labelledby="gpu-pref-l">
+          <button type="button" data-gpupref="any">לא משנה</button><button type="button" data-gpupref="amd">רק AMD</button><button type="button" data-gpupref="nvidia">רק NVIDIA</button>
+        </div>
+      </div>
+      <div class="row"><span class="label" id="cpu-pref-l">מעבד:</span>
+        <div class="seg" role="group" aria-labelledby="cpu-pref-l">
+          <button type="button" data-cpupref="any">לא משנה</button><button type="button" data-cpupref="amd">רק AMD</button><button type="button" data-cpupref="intel">רק Intel</button>
+        </div>
+      </div>
+      <div class="reco" id="reco" style="margin-top:10px"></div>
+      </details>
+    </div>
+
+    <div class="again">
+      <span class="variant-note" id="variant-note"></span>
+      <button type="button" class="again-btn" id="again"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"></path><path d="M21 3v5h-5"></path></svg>תראו לי עוד אפשרות</button>
+    </div>
+
+    <div class="parts" id="parts"></div>
+    <div class="checks" id="checks" aria-live="polite"></div>
+    <div class="pricebar" id="pricebar"><span>המחשב הזה: <b id="pb-total">—</b></span><button type="button" id="pb-go">איך קונים?</button></div>
+
+    <div class="summary" id="summary">
+      <div class="row"><span class="label" id="mode-l">איך קונים?</span>
+        <div class="seg" role="group" aria-labelledby="mode-l">
+          <button type="button" data-mode="cheap">הכי זול, מכמה חנויות</button><button type="button" data-mode="one">הכל מחנות אחת</button>
+        </div>
+      </div>
+      <div class="total"><span id="total-label">סה"כ</span><b id="total">—</b></div>
+      <div id="total-note" class="note"></div>
+      <div id="by-store" hidden></div>
+      <div class="toggle"><input type="checkbox" id="eilat"><label for="eilat"><b>מחירי אילת</b><small>בלי מע"מ, לקנייה בסניפים באילת</small></label></div>
+      <div class="toggle"><input type="checkbox" id="abroad"><label for="abroad"><b>להראות גם אמזון</b><small>לפעמים זול יותר, אבל מחכים כמה שבועות והאחריות מסובכת יותר</small></label></div>
+      <div class="row">
+        <button class="btn" id="share" type="button">לשתף בקישור</button>
+        <button class="btn dark" id="copy" type="button">להעתיק כטקסט</button>
+      </div>
+      <div class="small" id="copy-msg" aria-live="polite" style="word-break:break-all"></div>
+      <div class="alert-box" id="alert-box" hidden>
+        <b>התראת מחיר</b>
+        <span class="small">נבדוק כל בוקר, ונשלח מייל כשהמחשב הזה יורד מתחת לסכום שתבחרו.</span>
+        <div class="row" style="flex-wrap:nowrap">
+          <label for="alert-target" class="label" style="margin:0">מתחת ל-₪</label>
+          <input id="alert-target" class="input" inputmode="numeric" style="width:120px;padding:9px" placeholder="7,500">
+          <button class="btn dark" id="alert-save" type="button" style="min-height:44px;padding:8px 14px;font-size:15px">להפעיל</button>
+        </div>
+        <span class="small" id="alert-msg" aria-live="polite"></span>
+      </div>
+      <p class="small" style="margin:0">לפני שקונים: בדקו בדף המוצר כמה שנות אחריות ואם זה יבואן רשמי. <button type="button" class="linkbtn" data-term="יבואן" style="min-height:0;padding:0">מה ההבדל?</button></p>
+    </div>
+
+    <div class="block">
+      <h2>מי מרכיב?</h2>
+      <p class="small" style="margin:4px 0 10px">את החלקים צריך לחבר ביחד. יש ארבע דרכים, תבחרו אחת:</p>
+      <div class="assembly" id="assembly"></div>
+      <div id="guide" class="block"></div>
+    </div>
+  </section>
+
+  <section id="v-check" aria-labelledby="h-check" hidden>
+    <h1 id="h-check">בדיקת הצעה</h1>
+    <p class="lead">קיבלתם הצעה בפייסבוק, בוואטסאפ או בחנות? הדביקו אותה כאן. נעבור עליה חלק אחרי חלק, ונגיד מה בסדר, מה חסר ואיפה עובדים עליכם.</p>
+    <label for="offer" class="label">ההצעה שקיבלתם</label>
+    <div class="row" id="img-row" style="margin:6px 0 8px">
+      <label for="offer-img" class="pick-img">לצרף צילום מסך של ההצעה</label>
+      <input type="file" id="offer-img" accept="image/*" class="sr-only">
+      <span class="small" id="offer-img-name"></span>
+    </div>
+    <img id="offer-img-preview" alt="צילום המסך שצירפתם" hidden style="max-height:180px;border:1px solid var(--line);border-radius:6px;margin-bottom:8px">
+    <textarea id="offer" rows="8" placeholder="לדוגמה:&#10;מעבד: i5&#10;כרטיס מסך: RTX 4060&#10;זיכרון: 16GB&#10;כונן: 512GB&#10;ספק כוח: 500W&#10;מחיר: ‏4,800 ₪, כולל הרכבה"></textarea>
+    <div class="row block">
+      <button class="btn" id="check-go" type="button">תבדקו לי את ההצעה</button>
+      <button class="linkbtn" id="check-stop" type="button" hidden>לעצור</button>
+    </div>
+    <div id="check-out" class="answer" hidden aria-live="polite"></div>
+    <div id="check-off" class="empty" hidden>הבדיקה האוטומטית לא זמינה כאן כרגע. אפשר עדיין לבנות מחשב בלשונית "בנה מחשב" ולהשוות.</div>
+  </section>
+
+  <section id="v-upgrade" aria-labelledby="h-upgrade" hidden>
+    <h1 id="h-upgrade">שדרוג מחשב קיים</h1>
+    <p class="lead">לא תמיד צריך מחשב חדש. ספרו מה יש לכם היום ומה מפריע, ונגיד מה הכי שווה להחליף, בכמה, ומה אפשר להשאיר.</p>
+    <label for="up-have" class="label">מה יש במחשב היום?</label>
+    <textarea id="up-have" placeholder="מה שאתם יודעים, גם חלקי. לדוגמה: i5-10400F, GTX 1660, 16GB, ספק 500W, נקנה ב-2021"></textarea>
+    <div class="small" style="margin:4px 0 12px">לא יודעים? ב-Windows: לחיצה ימנית על "התחל", ואז "מערכת". צלמו את המסך ותתארו מה רשום שם.</div>
+    <label for="up-goal" class="label">מה מפריע או מה רוצים?</label>
+    <input id="up-goal" class="input" type="text" placeholder="למשל: פורטנייט נתקע, רוצה לשחק במשחקים חדשים" style="margin-bottom:12px">
+    <label for="up-budget" class="label">תקציב לשדרוג (₪)</label>
+    <input id="up-budget" class="input" inputmode="numeric" placeholder="2,000" style="width:140px;margin-bottom:12px">
+    <div class="row"><button class="btn" id="up-go" type="button">מה כדאי לשדרג?</button><button class="linkbtn" id="up-stop" type="button" hidden>לעצור</button></div>
+    <div id="up-out" class="answer" hidden aria-live="polite"></div>
+  </section>
+
+  <section id="v-glossary" aria-labelledby="h-glossary" hidden>
+    <h1 id="h-glossary">מילון</h1>
+    <p class="lead">כל המילים המוזרות שמופיעות בשמות של חלקים, בשורה אחת.</p>
+    <div id="glossary-list"></div>
+  </section>
+
+  <section id="v-ask" aria-labelledby="h-ask" hidden>
+    <h1 id="h-ask">שאלו</h1>
+    <p class="lead">כל שאלה, בלי להתבייש. התשובות מתייחסות למחשב שבניתם בלשונית "בנה מחשב".</p>
+    <div class="suggest" id="suggest">
+      <button type="button">הבן שלי משחק רק פורטנייט, זה לא מוגזם?</button>
+      <button type="button">למה לא לקנות מחשב מוכן?</button>
+      <button type="button">כמה שנים המחשב הזה יחזיק?</button>
+      <button type="button">מה זה לוח אם ולמה הוא חשוב?</button>
+    </div>
+    <div class="chat" id="chat" aria-live="polite"></div>
+    <form id="ask-form" class="block">
+      <label for="ask-in" class="label">השאלה שלכם</label>
+      <div class="row" style="flex-wrap:nowrap;margin-top:6px">
+        <input id="ask-in" class="input" type="text" autocomplete="off" placeholder="תשאלו מה שבא לכם">
+        <button class="btn dark" id="ask-go" type="submit">לשאול</button>
+      </div>
+    </form>
+    <div id="ask-off" class="empty" hidden>השאלות לא זמינות כאן כרגע.</div>
+  </section>
+
+  <section id="v-admin" aria-labelledby="h-admin" hidden>
+    <h1 id="h-admin">מחירים</h1>
+    <p class="lead">רק אתה רואה את הלשונית הזו. מה שתשמור כאן יופיע לכל מי שפותח את פקיל, עם תאריך העדכון.</p>
+    <div id="admin-list"></div>
+  </section>
+
+  <p class="trust">פקיל חינמי לגמרי. בלי פרסומות, בלי עמלות מחנויות. ליד כל מחיר כתוב מתי הוא נבדק. המחיר הקובע הוא המחיר בחנות.</p>
+</main>
+
+<nav class="tabs" aria-label="ניווט">
+  <div class="wrap" role="tablist">
+    <button class="tab" role="tab" data-tab="build" aria-selected="true" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2"></rect><rect x="9" y="9" width="6" height="6"></rect><path d="M9 2v2M15 2v2M9 20v2M15 20v2M2 9h2M2 15h2M20 9h2M20 15h2"></path></svg>בנה מחשב</button>
+    <button class="tab" role="tab" data-tab="check" aria-selected="false" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 11l3 3 8-8"></path><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"></path></svg>בדיקת הצעה</button>
+    <button class="tab" role="tab" data-tab="upgrade" aria-selected="false" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5"></path><path d="M5 12l7-7 7 7"></path></svg>שדרוג</button>
+    <button class="tab" role="tab" data-tab="ask" aria-selected="false" type="button"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>שאלו</button>
+    <button class="tab" role="tab" data-tab="admin" aria-selected="false" type="button" hidden id="tab-admin"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 13.4l-7.2 7.2a2 2 0 0 1-2.8 0L2 12V2h10l8.6 8.6a2 2 0 0 1 0 2.8z"></path><circle cx="7" cy="7" r="1.5"></circle></svg>מחירים</button>
+  </div>
+</nav>
+
+<script>
+(function(){
+"use strict";
+
+/* ---------- Catalog: real parts with the specs compatibility needs ---------- */
+var KINDS = [
+  {k:"cpu", name:"מעבד", plain:"המוח. מחליט כמה מהר הכל רץ.", must:true},
+  {k:"gpu", name:"כרטיס מסך", plain:"המנוע של המשחקים. פה הולך רוב הכסף.", must:false},
+  {k:"mobo", name:"לוח אם", plain:"השלדה. כל החלקים מתחברים אליו.", must:true},
+  {k:"ram", name:"זיכרון", plain:"שולחן העבודה. כמה דברים פתוחים בבת אחת.", must:true},
+  {k:"ssd", name:"כונן", plain:"הבגאז׳. איפה המשחקים והקבצים נשמרים.", must:true},
+  {k:"psu", name:"ספק כוח", plain:"מזין את כולם בחשמל. פה לא חוסכים.", must:true},
+  {k:"case", name:"מארז", plain:"הפח. שומר על הכל ומכניס אוויר.", must:true},
+  {k:"cooler", name:"קירור", plain:"הרדיאטור. חלק מהמעבדים באים עם אחד בקופסה.", must:false},
+  {k:"monitor", name:"מסך", plain:"איפה רואים את הכל. רק אם אין לכם.", optional:true},
+  {k:"kbm", name:"מקלדת ועכבר", plain:"סט אחד, עם אותיות בעברית. רק אם אין לכם.", optional:true}
+];
+var CAT = {
+  cpu:[
+    {id:"r5-7600x", name:"AMD Ryzen 5 7600X (Tray)", socket:"AM5", cooler:false, cores:6, why:"6 ליבות. מספיק לכל משחק היום ובמחיר טוב. Tray אומר בלי קופסה ובלי קירור, אז קונים קירור בנפרד."},
+    {id:"r5-8500g", name:"AMD Ryzen 5 PRO 8500G (Tray)", socket:"AM5", cooler:false, cores:6, strongIgpu:true, why:"יש בו גרפיקה מובנית טובה, אז אפשר בלי כרטיס מסך. מצוין ללימודים ולמשחקים קלים."},
+    {id:"r5-9600x", name:"AMD Ryzen 5 9600X (Tray)", socket:"AM5", cooler:false, cores:6, why:"הדור החדש של אותו רעיון, קצת יותר מהיר מ-7600X."},
+    {id:"r7-9800x3d", name:"AMD Ryzen 7 9800X3D (Tray)", socket:"AM5", cooler:false, cores:8, why:"נחשב לאחד המעבדים הכי טובים לגיימינג. שווה רק אם גם כרטיס המסך חזק."},
+    {id:"r9-9900x", name:"AMD Ryzen 9 9900X (Tray)", socket:"AM5", cooler:false, cores:12, why:"12 ליבות. לעריכת וידאו זה מקצר המתנות, לגיימינג בלבד זה מיותר."},
+    {id:"i5-14400f", name:"Intel Core i5-14400F (Tray)", socket:"LGA1700", cooler:false, cores:10, noIgpu:true, why:"מעבד טוב וזול של אינטל. אין לו גרפיקה מובנית, אז חייבים כרטיס מסך."},
+    {id:"i5-14400", name:"Intel Core i5-14400 (Tray)", socket:"LGA1700", cooler:false, cores:10, why:"כמו 14400F אבל עם גרפיקה מובנית, אז אפשר בלי כרטיס מסך."},
+    {id:"u5-245k", name:"Intel Core Ultra 5 245K (Tray)", socket:"LGA1851", cooler:false, cores:14, why:"הדור החדש של אינטל. צריך לוח מסוג אחר מהדור הקודם."},
+    {id:"u7-265k", name:"Intel Core Ultra 7 265K (Tray)", socket:"LGA1851", cooler:false, cores:20, why:"20 ליבות. חזק מאוד לעריכה ולעבודה כבדה. במשחקים הוא טוב, אבל ה-X3D של AMD מהיר יותר."}
+  ],
+  gpu:[
+    {id:"none", name:"בלי כרטיס מסך", rec:0, why:"משתמשים בגרפיקה שבתוך המעבד. מספיק ללימודים, ליוטיוב ולמשחקים קלים."},
+    {id:"rx9060xt", name:"AMD Radeon RX 9060 XT 16GB", rec:450, why:"כרטיס טוב למסך רגיל (1080p). פורטנייט, FIFA ו-וורזון ירוצו חלק."},
+    {id:"rtx5060ti", name:"NVIDIA GeForce RTX 5060 Ti 16GB", rec:450, why:"מקביל ל-9060 XT, עם יתרון בתוכנות עריכה ובחלק מהמשחקים. תבחרו לפי המחיר."},
+    {id:"rtx5070", name:"NVIDIA GeForce RTX 5070", rec:650, why:"קפיצה ברורה מעל השורה האמצעית. טוב גם למסך 1440p."},
+    {id:"rx9070", name:"AMD Radeon RX 9070", rec:650, why:"המתחרה של AMD ל-5070, עם 16GB זיכרון. טוב מאוד למסך 1440p."},
+    {id:"rx9070xt", name:"AMD Radeon RX 9070 XT", rec:750, why:"חזק מאוד ל-1440p, ובדרך כלל זול מהמתחרה של אנבידיה."},
+    {id:"rtx5070ti", name:"NVIDIA GeForce RTX 5070 Ti", rec:750, why:"חזק מאוד ל-1440p, עם יתרון בתוכנות עריכה ובתכונות של אנבידיה."},
+    {id:"rtx5080", name:"NVIDIA GeForce RTX 5080", rec:850, why:"מהשורה העליונה. שווה את זה למסך ברזולוציה גבוהה והכל על מקסימום. למסך רגיל זה מיותר."},
+    {id:"rtx5090", name:"NVIDIA GeForce RTX 5090", rec:1000, why:"הכי חזק שיש, במחיר בהתאם. רק אם אתם יודעים בדיוק למה אתם צריכים אותו."}
+  ],
+  mobo:[
+    {id:"b650m", name:"לוח B650M (Micro-ATX)", socket:"AM5", ram:"DDR5", form:"mATX", why:"לוח פשוט ואמין למעבדי AMD. קטן יותר, נכנס לכל מארז."},
+    {id:"b650", name:"לוח B650 (ATX)", socket:"AM5", ram:"DDR5", form:"ATX", why:"לוח מלא למעבדי AMD, עם יותר חיבורים ומקום לשדרוגים."},
+    {id:"b760m-d5", name:"לוח B760M DDR5 (Micro-ATX)", socket:"LGA1700", ram:"DDR5", form:"mATX", why:"לוח למעבדי אינטל מדור 14. שימו לב לקנות גרסת DDR5."},
+    {id:"b860m", name:"לוח B860M (Micro-ATX)", socket:"LGA1851", ram:"DDR5", form:"mATX", why:"לוח לדור החדש של אינטל (Core Ultra)."}
+  ],
+  ram:[
+    {id:"d5-16", name:"16GB DDR5 (2×8)", type:"DDR5", gb:16, why:"מספיק ללימודים ולמשחקים, אבל צפוף אם פתוחים הרבה דברים ברקע."},
+    {id:"d5-32", name:"32GB DDR5-6000 (2×16)", type:"DDR5", gb:32, why:"הנקודה המתוקה היום. מספיק למשחקים עם דיסקורד ודפדפן ברקע."},
+    {id:"d5-64", name:"64GB DDR5 (2×32)", type:"DDR5", gb:64, why:"לעריכת וידאו רצינית. לגיימינג זה מיותר."}
+  ],
+  ssd:[
+    {id:"nvme-500", name:"SSD NVMe 500GB", gb:500, why:"מספיק ללימודים. למשחקים יתמלא מהר."},
+    {id:"nvme-1tb", name:"SSD NVMe 1TB", gb:1000, why:"מחזיק כמה משחקים גדולים בבת אחת, והכל נטען מהר."},
+    {id:"nvme-2tb", name:"SSD NVMe 2TB", gb:2000, why:"למי שמשחק הרבה משחקים או שומר הרבה וידאו."}
+  ],
+  psu:[
+    {id:"psu-550", name:"550W, תקן 80+ Gold", w:550, why:"מספיק למחשב בלי כרטיס מסך חזק."},
+    {id:"psu-650", name:"650W, תקן 80+ Gold", w:650, why:"מספיק לכרטיסים מהשורה האמצעית, עם מרווח."},
+    {id:"psu-750", name:"750W, תקן 80+ Gold", w:750, why:"מתאים לכרטיסים חזקים, ומשאיר מקום לשדרוג."},
+    {id:"psu-850", name:"850W, תקן 80+ Gold", w:850, why:"לכרטיסים מהשורה העליונה."},
+    {id:"psu-1000", name:"1000W, תקן 80+ Gold", w:1000, why:"רק לכרטיס הכי חזק שיש."}
+  ],
+  "case":[
+    {id:"case-matx", name:"מארז Micro-ATX עם זרימת אוויר טובה", fits:["mATX"], why:"קטן ונוח. מתאים רק ללוחות Micro-ATX."},
+    {id:"case-atx", name:"מארז Mid Tower ATX עם זרימת אוויר טובה", fits:["ATX","mATX"], why:"מקום לכל לוח ולכרטיסים ארוכים. עדיף מארז עם חזית מחוררת."}
+  ],
+  cooler:[
+    {id:"box", name:"יש לי כבר קירור", why:"רק אם המעבד הגיע בקופסה עם קירור, או שיש לכם אחד מתאים בבית."},
+    {id:"air-basic", name:"קירור אוויר בסיסי (מגדל קטן)", why:"מספיק למעבדים חסכוניים כמו 7600X ו-14400F. זול ושקט."},
+    {id:"air", name:"קירור אוויר (מגדל)", why:"שקט וקר יותר, מתאים גם למעבדים חזקים, וכמעט לא מתקלקל."},
+    {id:"aio360", name:"קירור נוזלי 360 מ״מ", why:"למעבדים חמים במיוחד. יקר יותר ולא חובה ברוב המחשבים."}
+  ],
+  monitor:[
+    {id:"mon-24", name:"מסך 24 אינץ', Full HD, 144Hz ומעלה", why:"מתאים לכרטיסים מהשורה האמצעית. 144Hz ומעלה עושה משחקים חלקים הרבה יותר ממסך משרדי."},
+    {id:"mon-27", name:"מסך 27 אינץ', QHD (1440p), 144Hz ומעלה", why:"תמונה חדה יותר ומסך גדול. שווה כשכרטיס המסך חזק מספיק כדי לנצל אותו."}
+  ],
+  kbm:[
+    {id:"kbm-wired", name:"סט מקלדת ועכבר חוטי", why:"הכי זול ואין סוללות. מספיק לגמרי ללימודים ולעבודה."},
+    {id:"kbm-wireless", name:"סט מקלדת ועכבר אלחוטי, עברית/אנגלית", why:"בלי חוטים על השולחן. עובד על סוללות שמחזיקות הרבה זמן."}
+  ]
+};
+function periphFor(b){ var g=CAT.gpu.filter(function(x){return x.id===b.gpu;})[0]; return {monitor: g && g.rec>=650 ? "mon-27" : "mon-24", kbm:"kbm-wireless"}; }
+var BY = {}; Object.keys(CAT).forEach(function(k){ CAT[k].forEach(function(p){ BY[k+":"+p.id]=p; }); });
+
+var LEVELS = [
+  {id:"save", name:"חסכוני", hint:"עושה את העבודה, בלי מותרות"},
+  {id:"mid", name:"מאוזן", hint:"הכי הרבה תמורה לכסף"},
+  {id:"strong", name:"חזק", hint:"יחזיק יותר שנים בהגדרות גבוהות"},
+  {id:"max", name:"בלי פשרות", hint:"הכי טוב, במחיר בהתאם"}
+];
+function B(cpu,gpu,mobo,ram,ssd,psu,cs,cooler){ return {cpu:cpu,gpu:gpu,mobo:mobo,ram:ram,ssd:ssd,psu:psu,"case":cs,cooler:cooler}; }
+var PRESETS = {
+  game:{
+    save:[B("r5-7600x","rx9060xt","b650m","d5-32","nvme-1tb","psu-650","case-matx","air-basic"),
+          B("r5-7600x","rtx5060ti","b650m","d5-32","nvme-1tb","psu-650","case-matx","air-basic"),
+          B("i5-14400f","rx9060xt","b760m-d5","d5-32","nvme-1tb","psu-650","case-matx","air-basic")],
+    mid:[B("r5-9600x","rtx5070","b650","d5-32","nvme-1tb","psu-750","case-atx","air"),
+         B("r5-7600x","rx9070","b650m","d5-32","nvme-1tb","psu-750","case-atx","air-basic"),
+         B("u5-245k","rtx5070","b860m","d5-32","nvme-1tb","psu-750","case-atx","air")],
+    strong:[B("r7-9800x3d","rx9070xt","b650","d5-32","nvme-2tb","psu-850","case-atx","air"),
+            B("r7-9800x3d","rtx5070ti","b650","d5-32","nvme-2tb","psu-850","case-atx","air"),
+            B("r5-9600x","rx9070xt","b650","d5-32","nvme-2tb","psu-850","case-atx","air")],
+    max:[B("r7-9800x3d","rtx5080","b650","d5-32","nvme-2tb","psu-850","case-atx","aio360"),
+         B("r7-9800x3d","rtx5090","b650","d5-64","nvme-2tb","psu-1000","case-atx","aio360")]
+  },
+  study:{
+    save:[B("r5-8500g","none","b650m","d5-32","nvme-1tb","psu-650","case-matx","air-basic"),
+          B("i5-14400","none","b760m-d5","d5-32","nvme-1tb","psu-650","case-matx","air-basic")],
+    mid:[B("r5-8500g","none","b650m","d5-32","nvme-1tb","psu-650","case-matx","air-basic"),
+         B("i5-14400","none","b760m-d5","d5-32","nvme-1tb","psu-650","case-matx","air-basic")],
+    strong:[B("r5-8500g","none","b650m","d5-32","nvme-1tb","psu-650","case-matx","air-basic"),
+            B("i5-14400","none","b760m-d5","d5-32","nvme-1tb","psu-650","case-matx","air-basic")],
+    max:[B("r5-9600x","rx9060xt","b650m","d5-32","nvme-1tb","psu-650","case-matx","air"),
+         B("u5-245k","rtx5060ti","b860m","d5-32","nvme-1tb","psu-650","case-atx","air")]
+  },
+  edit:{
+    save:[B("r5-7600x","rtx5060ti","b650m","d5-32","nvme-1tb","psu-650","case-matx","air-basic"),
+          B("i5-14400f","rtx5060ti","b760m-d5","d5-32","nvme-1tb","psu-650","case-matx","air-basic")],
+    mid:[B("r9-9900x","rtx5070","b650","d5-32","nvme-2tb","psu-750","case-atx","air"),
+         B("u7-265k","rtx5070","b860m","d5-32","nvme-2tb","psu-750","case-atx","air"),
+         B("r9-9900x","rx9070","b650","d5-32","nvme-2tb","psu-750","case-atx","air")],
+    strong:[B("r9-9900x","rtx5070ti","b650","d5-64","nvme-2tb","psu-850","case-atx","air"),
+            B("u7-265k","rtx5070ti","b860m","d5-64","nvme-2tb","psu-850","case-atx","air")],
+    max:[B("r9-9900x","rtx5080","b650","d5-64","nvme-2tb","psu-850","case-atx","aio360"),
+         B("u7-265k","rtx5080","b860m","d5-64","nvme-2tb","psu-850","case-atx","aio360")]
+  }
+};
+var GPU_EQ = {
+  amd:{rtx5060ti:"rx9060xt", rtx5070:"rx9070", rtx5070ti:"rx9070xt", rtx5080:"rx9070xt", rtx5090:"rx9070xt"},
+  nvidia:{rx9060xt:"rtx5060ti", rx9070:"rtx5070", rx9070xt:"rtx5070ti"}
+};
+var INTEL_FOR = {
+  game:{save:["i5-14400f","b760m-d5","air-basic"], mid:["u5-245k","b860m","air"], strong:["u7-265k","b860m","air"], max:["u7-265k","b860m","aio360"]},
+  study:{save:["i5-14400","b760m-d5","air-basic"], mid:["i5-14400","b760m-d5","air-basic"], strong:["i5-14400","b760m-d5","air-basic"], max:["u5-245k","b860m","air"]},
+  edit:{save:["i5-14400f","b760m-d5","air-basic"], mid:["u7-265k","b860m","air"], strong:["u7-265k","b860m","air"], max:["u7-265k","b860m","aio360"]}
+};
+function isIntel(id){ return BY["cpu:"+id].socket!=="AM5"; }
+function gpuBrand(id){ return id.indexOf("rx")===0 ? "amd" : (id.indexOf("rtx")===0 ? "nvidia" : "none"); }
+function variants(){
+  var base = PRESETS[S.use][S.level].map(function(b){ return Object.assign({}, b); });
+  if(S.cpuPref==="amd"){ var a = base.filter(function(b){ return !isIntel(b.cpu); }); base = a.length ? a : base; }
+  if(S.cpuPref==="intel"){
+    var ip = INTEL_FOR[S.use][S.level];
+    base = base.map(function(b){
+      if(isIntel(b.cpu)) return b;
+      var n = Object.assign({}, b, {cpu:ip[0], mobo:ip[1], cooler:ip[2]});
+      if(BY["mobo:"+ip[1]].form==="ATX") n["case"]="case-atx";
+      if(n.gpu==="none" && BY["cpu:"+ip[0]].noIgpu) n.cpu="i5-14400";
+      return n;
+    });
+  }
+  var note = "";
+  if(S.gpuPref!=="any"){
+    base = base.map(function(b){
+      if(b.gpu==="none" || gpuBrand(b.gpu)===S.gpuPref) return b;
+      var to = GPU_EQ[S.gpuPref][b.gpu];
+      if(S.gpuPref==="amd" && (b.gpu==="rtx5080"||b.gpu==="rtx5090")) note = "ל-AMD אין כרגע כרטיס ברמה של 5080. בחרנו את הכי חזק שלהם, 9070 XT.";
+      return Object.assign({}, b, {gpu:to});
+    });
+  }
+  var seen = {}, out = [];
+  base.forEach(function(b){ var k = JSON.stringify(b); if(!seen[k]){ seen[k]=1; out.push(b); } });
+  return {list:out, note:note};
+}
+
+/* ---------- State ---------- */
+var ART_URL = "https://claude.ai/artifact/WHPrWaFniNapuFM8L6Km5w";
+var STORES = [
+  {id:"ksp", name:"KSP"}, {id:"ivory", name:"איבורי"}, {id:"bug", name:"באג"},
+  {id:"tms", name:"TMS"}, {id:"sto", name:"STO מחשבים"}, {id:"kinggames", name:"King Games"}, {id:"pconline", name:"PC-Online"}, {id:"plonter", name:"פלאנטר"}, {id:"amazon", name:"אמזון", abroad:true}
+];
+var STORE_BY = {}; STORES.forEach(function(s){ STORE_BY[s.id]=s; });
+var ASSEMBLY = [
+  {id:"self", name:"אני מרכיב לבד", text:"עולה ₪0. לוקח בערך שעתיים-שלוש בפעם הראשונה, וצריך רק מברג פיליפס. יש מדריך צעד אחר צעד כאן למטה."},
+  {id:"friend", name:"חבר או קרוב שמבין במחשבים", text:"עולה ₪0. שלחו לו את הקישור למחשב (כפתור \"לשתף בקישור\"), והוא יראה בדיוק מה קניתם. המדריך כאן למטה יעזור גם לו."},
+  {id:"store", name:"החנות מרכיבה", text:"החנות מרכיבה, מתקינה ובודקת שהכל עובד. ב-TMS יש כמה מסלולים לפי מהירות: עד 7 ימי עסקים (Silver, חינם ברכישת מחשב חדש), עד 3 ימים (Gold) ועד יומיים (Express). את המחיר המדויק כדאי לברר מול החנות. בדרך כלל צריך לקנות את כל החלקים באותה חנות, אז כדאי לבחור למעלה \"הכל מחנות אחת\"."},
+  {id:"lab", name:"טכנאי או מעבדה", text:"משלמים לטכנאי על ההרכבה. היתרון: קונים כל חלק איפה שהכי זול ומביאים אליו. בקשו הצעת מחיר מראש, ואפשר לבדוק אותה בלשונית \"בדיקת הצעה\"."}
+];
+var GLOSSARY = [
+  {t:"Tray", re:/\btray\b/i, d:"מעבד שנמכר בלי קופסה ובלי קירור. זול יותר, אבל צריך לקנות קירור בנפרד. כדאי לבדוק כמה אחריות יש עליו."},
+  {t:"Box", re:/\bbox\b/i, d:"מעבד בקופסה המקורית. לפעמים כולל קירור, לפעמים לא. כתוב בדף המוצר."},
+  {t:"X3D", re:/x3d/i, d:"מעבד AMD עם זיכרון מטמון גדול במיוחד. נחשב לטוב ביותר למשחקים כרגע."},
+  {t:"AM5 / LGA1700 / LGA1851", re:/am5|lga ?1(700|851)|\/ ?1(700|851)/i, d:"סוג השקע במעבד. הלוח חייב להיות בדיוק מאותו סוג, אחרת המעבד לא נכנס."},
+  {t:"DDR5", re:/ddr5/i, d:"הדור החדש של זיכרון. כל הלוחות החדשים עובדים איתו, אבל הוא לא מתאים ללוחות ישנים של DDR4."},
+  {t:"CL", kinds:["ram"], re:/\bcl\d+/i, d:"CL36, CL30 וכו': מהירות התגובה של הזיכרון. מספר נמוך יותר זה מהיר יותר, אבל במשחקים ההבדל קטן ולא שווה הרבה כסף."},
+  {t:"6000 / 6400", kinds:["ram"], re:/\b(5200|5600|6000|6400|7200)\b/, d:"מהירות הזיכרון. 6000 נחשב לנקודה המתוקה למעבדי AMD היום."},
+  {t:"EXPO / XMP", re:/\b(expo|xmp)\b/i, d:"הגדרה בלוח (ב-BIOS) שמפעילה את המהירות המלאה של הזיכרון. בלי להפעיל אותה, הזיכרון עובד לאט יותר. זה שלב במדריך ההרכבה."},
+  {t:"2×16", re:/2 ?x ?16|2×16|2x32|2×32/i, d:"שני כרטיסי זיכרון. שניים עובדים מהר יותר מכרטיס אחד גדול באותו נפח."},
+  {t:"NVMe / M.2", re:/nvme|m\.2/i, d:"כונן קטן שנכנס ישר ללוח, בלי כבלים. הרבה יותר מהיר מדיסק קשיח רגיל."},
+  {t:"Gen4 / Gen5", re:/gen ?[45]/i, d:"דור החיבור של הכונן. Gen4 מספיק לכל משחק היום, Gen5 יקר יותר ולא מורגש ברוב המקרים."},
+  {t:"ATX / Micro-ATX", kinds:["mobo","case"], re:/\b(micro-?atx|matx|atx)\b|b\d{3}m\b/i, d:"גודל הלוח. ATX גדול עם יותר חיבורים, Micro-ATX קטן יותר. המארז צריך להתאים לגודל הלוח."},
+  {t:"Gold / 80+", re:/\bgold\b|80\+/i, d:"תו יעילות של ספק כוח. Gold אומר שהוא מבזבז פחות חשמל, ובדרך כלל גם איכותי יותר."},
+  {t:"W (ואט)", kinds:["psu"], re:/\d{3,4} ?w\b/i, d:"כמה חשמל הספק יכול לתת. כרטיס מסך חזק צריך ספק חזק יותר."},
+  {t:"Ti / XT", kinds:["gpu"], re:/\b(ti|xt)\b/i, d:"גרסה חזקה יותר של אותו כרטיס. 5070 Ti חזק מ-5070, ו-9070 XT חזק מ-9070."},
+  {t:"OC", kinds:["gpu"], re:/\boc\b/i, d:"היצרן העלה קצת את המהירות מהמקור. ההבדל קטן, לא שווה לשלם עליו הרבה."},
+  {t:"SFF", re:/\bsff\b/i, d:"גרסה קצרה של הכרטיס, שנכנסת גם למארזים קטנים."},
+  {t:"16GB / 12GB בכרטיס מסך", kinds:["gpu"], re:/\b(12|16)\s?gb?\b/i, d:"כמה זיכרון יש לכרטיס המסך עצמו. יותר זיכרון עוזר במשחקים חדשים ובהגדרות גבוהות."},
+  {t:"AIO / קירור נוזלי", kinds:["cooler"], re:/\b(aio|360)\b|נוזלי/i, d:"קירור נוזלי סגור ומוכן להתקנה. קר ושקט, אבל יקר יותר ולא חובה."},
+  {t:"RGB / ARGB", re:/\ba?rgb\b/i, d:"תאורה צבעונית. יפה, לא משפיע על הביצועים."},
+  {t:"Full HD / QHD", re:/\b(fhd|qhd|1080p|1440p|full hd)\b/i, d:"רזולוציה של המסך. Full HD (1080p) זה הרגיל. QHD (1440p) חד יותר, אבל צריך כרטיס מסך חזק יותר."},
+  {t:"Hz", re:/\d{2,3} ?hz/i, d:"כמה פעמים בשנייה המסך מתרענן. 144 ומעלה נותן משחקים חלקים. מסך משרדי רגיל הוא 60 או 75."},
+  {t:"יבואן", re:/^$/, d:"יבואן רשמי: המוצר יובא דרך הנציגות של החברה בישראל, והאחריות היא דרכם. יבוא מקביל: מוצר מקורי שהובא בדרך אחרת. לפעמים זול יותר, אבל האחריות היא רק של החנות. בכל מקרה, בדקו בדף המוצר כמה שנות אחריות יש ומי נותן אותה."}
+];
+var S = { use:"game", level:"mid", build:null, open:null, eilat:false, abroad:false, v:0, gpuPref:"any", cpuPref:"any", theme:"auto", vnote:"", picks:{}, mode:"cheap", asm:"self", periph:false, term:null };
+var OFFERS = {}; // "kind:cls" -> [offer docs]
+var HISTORY = {}; // offer key -> points
+var sample = null, db = null, isOwner = false, uid = null;
+
+function load(){ try{ var s = JSON.parse(localStorage.getItem("pcil") || "null"); if(s){ ["use","level","build","v","gpuPref","cpuPref","theme","picks","mode","asm"].forEach(function(k){ if(s[k]!==undefined && s[k]!==null) S[k]=s[k]; }); S.eilat=!!s.eilat; S.abroad=!!s.abroad; S.periph=!!s.periph; } }catch(e){} }
+function save(){ try{ localStorage.setItem("pcil", JSON.stringify({use:S.use,level:S.level,build:S.build,eilat:S.eilat,abroad:S.abroad,v:S.v,gpuPref:S.gpuPref,cpuPref:S.cpuPref,theme:S.theme,picks:S.picks,mode:S.mode,asm:S.asm,periph:S.periph})); }catch(e){} }
+function preset(){ var r = variants(); S.vcount = r.list.length; S.vnote = r.note; var b = Object.assign({}, r.list[S.v % r.list.length]); return Object.assign(b, periphFor(b)); }
+function activeKinds(){ return KINDS.filter(function(kd){ return !kd.optional || S.periph; }); }
+
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+function money(n){ return "₪" + Math.round(n).toLocaleString("en-US"); }
+function part(k){ return BY[k+":"+S.build[k]]; }
+function isFree(k,id){ return (k==="gpu"&&id==="none")||(k==="cooler"&&id==="box"); }
+
+/* ---------- Compatibility ---------- */
+function problemsFor(b){
+  var cpu=BY["cpu:"+b.cpu], gpu=BY["gpu:"+b.gpu], mobo=BY["mobo:"+b.mobo], ram=BY["ram:"+b.ram], psu=BY["psu:"+b.psu], cs=BY["case:"+b["case"]];
+  var out=[];
+  out.push(cpu.socket===mobo.socket ? {ok:true,t:"המעבד והלוח מאותה משפחה ("+cpu.socket+")"} : {ok:false,t:"המעבד ("+cpu.socket+") לא נכנס ללוח ("+mobo.socket+"). צריך להחליף אחד מהם."});
+  out.push(ram.type===mobo.ram ? {ok:true,t:"הזיכרון ("+ram.type+") מתאים ללוח"} : {ok:false,t:"הזיכרון לא מתאים ללוח. הלוח צריך "+mobo.ram+"."});
+  if(gpu.id==="none"){
+    out.push(cpu.noIgpu ? {ok:false,t:"למעבד הזה אין גרפיקה מובנית. בלי כרטיס מסך לא תהיה תמונה."} : {ok:true,t:"התמונה תגיע מהגרפיקה שבמעבד"});
+  } else {
+    out.push(psu.w>=gpu.rec ? {ok:true,t:"ספק "+psu.w+"W, והכרטיס צריך לפחות "+gpu.rec+"W"} : {ok:false,t:"הספק חלש מדי: "+psu.w+"W, והכרטיס צריך לפחות "+gpu.rec+"W."});
+  }
+  if(b.cooler==="box") out.push(cpu.cooler ? {ok:true,t:"הקירור מגיע בקופסת המעבד"} : {ok:false,t:"המעבד הזה מגיע בלי קירור. אם אין לכם קירור מתאים בבית, צריך לקנות."});
+  else out.push({ok:true,t:"יש קירור נפרד למעבד"});
+  out.push(cs.fits.indexOf(mobo.form)>-1 ? {ok:true,t:"הלוח נכנס למארז"} : {ok:false,t:"לוח ATX לא נכנס למארז Micro-ATX."});
+  return out;
+}
+function altProblem(k, id){
+  if(k==="monitor"||k==="kbm") return "";
+  var b = Object.assign({}, S.build); b[k]=id;
+  var bad = problemsFor(b).filter(function(p){return !p.ok;});
+  var before = problemsFor(S.build).filter(function(p){return !p.ok;}).length;
+  return bad.length>before ? bad[0].t : "";
+}
+
+/* ---------- Offers: every model, every store ---------- */
+function priceOf(o){ var st=STORE_BY[o.store]||{}; return S.eilat && !st.abroad ? Number(o.eilat) : Number(o.price); }
+function offers(k, cls){
+  return (OFFERS[k+":"+cls]||[]).filter(function(o){
+    var st = STORE_BY[o.store]; if(!st) return false;
+    if(o.inStock===false) return false;
+    if(st.abroad && !S.abroad) return false;
+    return priceOf(o)>0;
+  }).map(function(o){ return {doc:o, store:STORE_BY[o.store], price:priceOf(o), model:o.model, brand:o.brand, url:o.url, key:o._key, updatedAt:o.updatedAt}; })
+    .sort(function(a,b){ return a.price-b.price; });
+}
+function oneStore(){
+  var need = activeKinds().filter(function(kd){ return !isFree(kd.k, part(kd.k).id); });
+  var best=null;
+  STORES.forEach(function(st){
+    if(st.abroad && !S.abroad) return;
+    var sum=0, ok=true;
+    need.forEach(function(kd){ var os=offers(kd.k, part(kd.k).id).filter(function(o){return o.store.id===st.id;}); if(os.length) sum+=os[0].price; else ok=false; });
+    if(ok && (!best || sum<best.sum)) best={store:st, sum:sum};
+  });
+  return best;
+}
+function chosen(k){
+  var p = part(k); if(!p || isFree(k,p.id)) return null;
+  var list = offers(k, p.id); if(!list.length) return null;
+  var pk = S.picks[k];
+  if(pk){ var hit = list.filter(function(o){ return o.key===pk; })[0]; if(hit) return hit; }
+  if(S.mode==="one"){ var one=oneStore(); if(one){ var at=list.filter(function(o){ return o.store.id===one.store.id; })[0]; if(at) return at; } }
+  return list[0];
+}
+function totalNow(){ var sum=0, missing=0; activeKinds().forEach(function(kd){ var p=part(kd.k); if(isFree(kd.k,p.id)) return; var c=chosen(kd.k); if(c) sum+=c.price; else missing++; }); return {sum:sum, missing:missing}; }
+function dateTxt(iso){ if(!iso) return ""; try{ return new Date(iso).toLocaleDateString("he-IL",{day:"numeric",month:"numeric"}); }catch(e){ return ""; } }
+function inStore(n){ return "ב" + (/^[A-Za-z0-9]/.test(n||"") ? "-" : "") + n; }
+function fromStore(n){ return "מ" + (/^[A-Za-z0-9]/.test(n||"") ? "-" : "") + n; }
+function levelPrice(lv){
+  var keep={level:S.level, v:S.v, vcount:S.vcount, vnote:S.vnote}; S.level=lv; S.v=0;
+  var b; try{ b=preset(); } finally { S.level=keep.level; S.v=keep.v; S.vcount=keep.vcount; S.vnote=keep.vnote; }
+  var sum=0, miss=0; activeKinds().forEach(function(kd){ var id=b[kd.k]; if(isFree(kd.k,id)) return; var o=offers(kd.k,id); if(o.length) sum+=o[0].price; else miss++; });
+  return miss||!sum ? 0 : sum;
+}
+function roundK(n){ return Math.round(n/100)*100; }
+function safeUrl(u){ return /^https:\/\//i.test(u||"") ? u : ""; }
+function trendFor(key, now){
+  var pts = HISTORY[key]; if(!pts || pts.length<2) return "";
+  var first = pts[0]; if(!(first.p>0) || first.p===now) return "";
+  var diff = Math.round(now - first.p);
+  return diff<0 ? '<span class="trend down">ירד '+money(-diff)+' מאז '+esc(dateTxt(first.d))+'</span>' : '<span class="trend up">עלה '+money(diff)+' מאז '+esc(dateTxt(first.d))+'</span>';
+}
+function termsIn(text,k){ return GLOSSARY.filter(function(g){ return (!g.kinds || g.kinds.indexOf(k)>-1) && g.re.test(text||""); }); }
+
+/* ---------- Render: build ---------- */
+function renderUse(){
+  document.querySelectorAll("[data-use]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.use===S.use)); });
+  document.getElementById("levels").innerHTML = LEVELS.map(function(l){
+    return '<button type="button" class="level" data-level="'+l.id+'" aria-pressed="'+(l.id===S.level)+'"><b>'+esc(l.name)+'</b><span>'+esc(l.hint)+'</span>'+(function(){ var lp=levelPrice(l.id); return lp ? '<em>בערך '+money(roundK(lp))+'</em>' : ''; })()+'</button>';
+  }).join("");
+  document.querySelectorAll("[data-gpupref]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.gpupref===S.gpuPref)); });
+  document.querySelectorAll("[data-cpupref]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.cpupref===S.cpuPref)); });
+  document.querySelectorAll("[data-mode]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.mode===S.mode)); });
+  document.getElementById("periph").checked = S.periph;
+  var reco = S.use==="game"
+    ? "לגיימינג אנחנו ממליצים על מעבד AMD. מעבדי ה-X3D שלהם מובילים כרגע במשחקים, והלוח שלהם (AM5) מקבל עוד דורות של מעבדים, אז קל לשדרג בעתיד. Intel טובה לעבודה ולעריכה, ולפעמים זולה יותר במבצעים."
+    : (S.use==="edit" ? "לעריכה שני היצרנים טובים. מעבד עם הרבה ליבות מקצר המתנה לייצוא, וכרטיס NVIDIA נותן יתרון בחלק מתוכנות העריכה." : "ללימודים ולעבודה שני היצרנים מצוינים. תבחרו לפי המחיר.");
+  document.getElementById("reco").textContent = reco;
+  var n = S.vcount || 1;
+  document.getElementById("variant-note").textContent = (n>1 ? "אפשרות "+((S.v % n)+1)+" מתוך "+n+", כולן באותה רמה" : "יש אפשרות אחת בהגדרות האלה") + (S.vnote ? ". "+S.vnote : "");
+  document.getElementById("again").hidden = n<2;
+}
+function tagFor(kd){
+  if(kd.optional) return '<span class="tag opt">אם אין לכם</span>';
+  if(kd.k==="gpu") return S.use==="study" ? '<span class="tag opt">רשות</span>' : '<span class="tag">חובה לגיימינג</span>';
+  return '<span class="tag">חובה</span>';
+}
+function termChips(k, text){
+  var ts = termsIn(text,k); if(!ts.length) return "";
+  var openT = S.term && S.term.k===k ? S.term.t : null;
+  var def = openT ? GLOSSARY.filter(function(g){return g.t===openT;})[0] : null;
+  return '<div class="terms" aria-label="מה זה אומר">'+ts.map(function(g){ return '<button type="button" class="term" data-tk="'+k+'" data-term="'+esc(g.t)+'" aria-expanded="'+(g.t===openT)+'">'+esc(g.t)+'?</button>'; }).join("")+'</div>'+(def?'<div class="term-def">'+esc(def.d)+'</div>':'');
+}
+function renderParts(){
+  var html = activeKinds().map(function(kd){
+    var k = kd.k, p = part(k), free = isFree(k,p.id), list = free ? [] : offers(k,p.id), c = free ? null : chosen(k);
+    var priceHtml = free ? '<b>₪0</b><span>אין מה לקנות</span>' : (c ? '<b>'+money(c.price)+'</b><span>'+esc(inStore(c.store.name))+'</span>' : '<b>—</b><span>עוד אין מחיר</span>');
+    var open = S.open===k;
+    var body = "";
+    if(open){
+      if(list.length){
+        body += '<div class="small" style="margin-top:4px">'+list.length+' דגמים מתאימים, מהזול ליקר. כולם מתאימים לשאר המחשב.</div><div class="models">'+list.map(function(o){
+          var on = c && o.key===c.key, d=o.doc, extra=[];
+          if(d.warranty) extra.push("אחריות "+d.warranty); if(d.importer) extra.push(d.importer);
+          return '<button type="button" class="model" data-pick="'+k+'" data-key="'+esc(o.key)+'" aria-pressed="'+on+'"><span style="min-width:0"><span class="m-name">'+esc(o.model)+'</span><span class="m-sub">'+esc(o.store.name)+(o.store.abroad?' (מחו"ל)':'')+(extra.length?' · '+esc(extra.join(" · ")):'')+(o.updatedAt?' · נבדק '+esc(dateTxt(o.updatedAt)):'')+'</span>'+trendFor(o.key,o.price)+'</span><b>'+money(o.price)+'</b></button>';
+        }).join("")+'</div>';
+        if(c && safeUrl(c.url)) body += '<div><a class="store-at" href="'+esc(safeUrl(c.url))+'" target="_blank" rel="noopener">לדף של '+esc(c.model)+' '+esc(inStore(c.store.name))+'</a></div>';
+      }
+      var alts = CAT[k].filter(function(a){ if(a.id===p.id) return false; if(k==="gpu" && S.gpuPref!=="any" && a.id!=="none" && gpuBrand(a.id)!==S.gpuPref) return false; if(k==="cpu" && S.cpuPref==="amd" && isIntel(a.id)) return false; if(k==="cpu" && S.cpuPref==="intel" && !isIntel(a.id)) return false; return true; });
+      if(alts.length) body += '<div class="small" style="margin-top:8px">או סוג אחר של '+esc(kd.name)+':</div><div class="alts">'+alts.map(function(a){
+        var bad = altProblem(k,a.id), ol = isFree(k,a.id) ? null : offers(k,a.id);
+        var from = isFree(k,a.id) ? " · ₪0" : (ol && ol.length ? " · מ-"+money(ol[0].price) : "");
+        return '<button type="button" class="alt" data-swap="'+k+'" data-id="'+a.id+'"><b>'+esc(a.name)+esc(from)+'</b><small>'+esc(a.why)+'</small>'+(bad?'<small class="bad">שימו לב: '+esc(bad)+'</small>':'')+'</button>';
+      }).join("")+'</div>';
+    }
+    var moreTxt = open ? 'לסגור' : (list.length>1 ? list.length+' דגמים ועוד אפשרויות' : 'עוד אפשרויות');
+    var why = p.why;
+    if(k==="monitor") why += S.build.monitor==="mon-27" ? " בחרנו 27 אינץ' כי כרטיס המסך שלכם חזק מספיק." : " בחרנו 24 אינץ' כי זה מה שכרטיס המסך שלכם מנצל הכי טוב.";
+    return '<div class="part"><div class="part-head"><div style="min-width:0"><div class="kind"><b>'+esc(kd.name)+'</b>'+tagFor(kd)+'</div><div class="plain">'+esc(kd.plain)+'</div></div><div class="price">'+priceHtml+'</div></div>'+
+      '<div class="pick">'+esc(c ? c.model : p.name)+'</div>'+(c?'<div class="small">'+esc(p.name)+'</div>':'')+
+      termChips(k, (c?c.model:"")+" "+p.name)+
+      '<p class="why">'+esc(why)+'</p>'+
+      '<div><button type="button" class="linkbtn" data-open="'+k+'" aria-expanded="'+open+'">'+esc(moreTxt)+'</button></div>'+body+'</div>';
+  }).join("");
+  document.getElementById("parts").innerHTML = html;
+}
+function renderChecks(){
+  var list = problemsFor(S.build);
+  var bad = list.filter(function(p){return !p.ok;}).length;
+  document.getElementById("checks").innerHTML = '<h2>'+(bad? 'יש '+bad+' בעיות התאמה' : 'הכל מתאים')+'</h2>'+list.map(function(p){
+    return '<div class="check '+(p.ok?'ok':'no')+'"><i aria-hidden="true">'+(p.ok?'✓':'✗')+'</i><span>'+esc(p.t)+'</span></div>';
+  }).join("");
+}
+function renderTotal(){
+  var per={}; var t=totalNow();
+  activeKinds().forEach(function(kd){ var p=part(kd.k); if(isFree(kd.k,p.id)) return; var c=chosen(kd.k); if(c){ var s=per[c.store.name]||(per[c.store.name]={n:0,sum:0}); s.n++; s.sum+=c.price; } });
+  document.getElementById("total").textContent = t.sum ? money(t.sum) : "—";
+  document.getElementById("total-label").textContent = S.mode==="one" ? "סה\"כ, מחנות אחת" : "סה\"כ, הכי זול";
+  var names = Object.keys(per), note="";
+  if(!t.sum) note = "עוד אין מחירים. ברגע שיהיו, הסכום והחנות הזולה לכל חלק יופיעו כאן.";
+  else {
+    if(S.mode==="one"){ var one=oneStore(); note = one ? "הכל "+fromStore(one.store.name)+". קל להזמין, ואפשר לבקש מהם להרכיב." : "אין חנות אחת שיש בה את כל החלקים. הצגנו את הזול ביותר לכל חלק."; }
+    else note = names.length>1 ? "קונים ב-"+names.length+" חנויות. יותר זול, אבל כמה הזמנות." : "כל החלקים הכי זולים נמצאים "+inStore(names[0])+".";
+    if(S.periph) note += " כולל מסך, מקלדת ועכבר.";
+    if(t.missing) note += " חסרים מחירים ל-"+t.missing+" חלקים, אז הסכום חלקי.";
+  }
+  if(t.sum && S.mode!=="one" && names.length>1){ var o1=oneStore(); if(o1 && o1.sum>t.sum) note += " הכל מחנות אחת ("+o1.store.name+") יעלה עוד "+money(o1.sum-t.sum)+"."; }
+  if(t.sum) note += " לא כולל הרכבה ו-Windows.";
+  document.getElementById("total-note").textContent = note;
+  document.getElementById("pb-total").textContent = t.sum ? money(t.sum) : "—";
+  var groups={}, order=[];
+  activeKinds().forEach(function(kd){ var p=part(kd.k); if(isFree(kd.k,p.id)) return; var c=chosen(kd.k); if(!c) return; var g=groups[c.store.id]; if(!g){ g=groups[c.store.id]={store:c.store, items:[], sum:0}; order.push(g); } g.items.push({kd:kd, c:c}); g.sum+=c.price; });
+  var bs = document.getElementById("by-store");
+  bs.hidden = !order.length;
+  bs.innerHTML = '<div class="label" style="margin:0 0 6px">רשימת קנייה'+(order.length>1?' ('+order.length+' חנויות)':'')+'</div><div style="display:flex;flex-direction:column;gap:8px">'+order.map(function(g){
+    return '<div class="buy"><div class="buy-head"><b>'+esc(inStore(g.store.name))+'</b><b>'+money(g.sum)+'</b></div><ul>'+g.items.map(function(it){
+      var u=safeUrl(it.c.url);
+      return '<li><span>'+esc(it.kd.name)+': '+esc(it.c.model)+'</span>'+(u?'<a href="'+esc(u)+'" target="_blank" rel="noopener">לקנייה</a>':'<b>'+money(it.c.price)+'</b>')+'</li>';
+    }).join("")+'</ul></div>';
+  }).join("")+'</div><p class="small" style="margin:6px 0 0">"לקנייה" פותח את דף המוצר באתר החנות. המחיר הקובע הוא המחיר שם.</p>';
+}
+function renderAssembly(){
+  document.getElementById("assembly").innerHTML = ASSEMBLY.map(function(a){
+    return '<button type="button" class="asm" data-asm="'+a.id+'" aria-pressed="'+(a.id===S.asm)+'"><b>'+esc(a.name)+'</b><span>'+esc(a.text)+'</span></button>';
+  }).join("");
+  renderGuide();
+}
+function yt(q){ return "https://www.youtube.com/results?search_query="+encodeURIComponent(q); }
+function renderGuide(){
+  var el = document.getElementById("guide");
+  if(S.asm!=="self" && S.asm!=="friend"){ el.innerHTML=""; return; }
+  var cpu=part("cpu"), gpu=part("gpu"), cool=part("cooler"), intel=isIntel(cpu.id), cn=(chosen("cooler")||{}).model||cool.name;
+  var steps = [
+    {b:"להתכונן", s:"שולחן גדול, מברג פיליפס, והחוברת של הלוח פתוחה לידכם. לפני שנוגעים בחלקים, נוגעים במשהו מתכתי כדי לפרוק חשמל סטטי. מרכיבים את הלוח על הקופסה שלו, לא על שטיח.", q:"how to build a pc beginner"},
+    {b:"מעבד ללוח", s:(intel?"מרימים את הידית ואת מסגרת המתכת של השקע. ":"מרימים את הידית של השקע. ")+"מיישרים את המשולש הקטן בפינת המעבד עם הסימון בשקע, ומניחים בעדינות, בלי ללחוץ. סוגרים את הידית. אם צריך כוח, משהו לא מיושר.", q:intel?"install intel lga1851 cpu":"install amd am5 cpu"},
+    {b:"זיכרון", s:"שני כרטיסים נכנסים בדרך כלל לחריצים השני והרביעי מהמעבד (בחוברת: A2 ו-B2). פותחים את התפסים, מיישרים את החריץ בכרטיס, ולוחצים חזק עד קליק.", q:"install ddr5 ram dual channel"},
+    {b:"כונן", s:"מוצאים את חריץ ה-M.2 הראשון בלוח (בדרך כלל מתחת למגן מתכת), מכניסים את הכונן בזווית, מורידים ומבריגים או נועלים.", q:"install m.2 nvme ssd"},
+    {b:"קירור", s:cool.id==="aio360" ? "מחברים את ראש הקירור הנוזלי על המעבד לפי ההוראות, ואת הרדיאטור לחלק העליון או הקדמי של המארז. מחברים את כבל המשאבה לחיבור CPU_FAN או AIO_PUMP." : "ברוב הקירורים יש משחה תרמית מוכנה על הבסיס. מורידים את המדבקה מהבסיס, מבריגים לפי ההוראות של "+cn+", ומחברים את כבל המאוורר ל-CPU_FAN בלוח.", q:cool.id==="aio360"?"install 360 aio cooler":"install tower cpu cooler"},
+    {b:"לוח לתוך המארז", s:"מכניסים את הלוח למארז, מיישרים עם הברגים הקטנים שכבר במארז, ומבריגים.", q:"install motherboard in case"},
+    {b:"ספק כוח", s:"מבריגים את הספק במקום שלו (בדרך כלל למטה, המאוורר כלפי מטה), ומעבירים את הכבלים מאחורי הלוח.", q:"install power supply pc"},
+  ];
+  if(gpu.id!=="none") steps.push({b:"כרטיס מסך", s:"מורידים את הכיסויים בגב המארז מול החריץ העליון, מכניסים את הכרטיס לחריץ הארוך העליון עד קליק, מבריגים, ומחברים את כבלי החשמל מהספק.", q:"install graphics card"});
+  steps.push(
+    {b:"כבלים", s:"כבל רחב (24 פינים) ללוח, כבל 8 פינים ליד המעבד, כבלי המארז (USB וכפתור הדלקה) לפי החוברת. זה השלב שהכי כדאי לעשות לאט.", q:"connect front panel connectors"},
+    {b:"הדלקה ראשונה", s:"מחברים מסך"+(gpu.id!=="none"?" לכרטיס המסך (לא ללוח)":" ללוח")+", מדליקים ולוחצים Delete כדי להיכנס ל-BIOS. בודקים שהזיכרון והכונן מופיעים, ומפעילים EXPO או XMP כדי שהזיכרון ירוץ במהירות המלאה.", q:"enable expo xmp bios"},
+    {b:"Windows", s:"מכינים מראש מחשב אחר עם דיסק און קי של 8GB ומעלה, מורידים את כלי ההתקנה מהאתר של מיקרוסופט, ומתקינים.", q:"install windows 11 from usb"}
+  );
+  el.innerHTML = '<h2>מדריך הרכבה למחשב שלכם</h2><p class="small" style="margin:4px 0 0">מותאם לחלקים שבחרתם. ליד כל שלב יש קישור לסרטונים ביוטיוב.</p><ol class="steps">'+steps.map(function(x){ return '<li><b>'+esc(x.b)+'</b><span>'+esc(x.s)+'</span> <a href="'+esc(yt(x.q))+'" target="_blank" rel="noopener">סרטונים</a></li>'; }).join("")+'</ol>';
+}
+function renderBuild(){ renderUse(); renderParts(); renderChecks(); renderTotal(); renderAssembly(); document.getElementById("eilat").checked=S.eilat; document.getElementById("abroad").checked=S.abroad; }
+
+function buildText(){
+  var lines = ["המחשב שבניתי בפקיל:"];
+  activeKinds().forEach(function(kd){ var p=part(kd.k), c=chosen(kd.k); lines.push(kd.name+": "+(c? c.model+" ("+money(c.price)+" "+inStore(c.store.name)+")" : p.name)); });
+  var t=document.getElementById("total").textContent; if(t!=="—") lines.push("סה\"כ: "+t+(S.eilat?" (מחירי אילת)":""));
+  var a = ASSEMBLY.filter(function(x){return x.id===S.asm;})[0]; if(a) lines.push("הרכבה: "+a.name);
+  return lines.join("\n");
+}
+function copyText(txt, msg, ok){ try{ navigator.clipboard.writeText(txt).then(function(){ msg.textContent=ok; }, function(){ msg.textContent=txt; }); }catch(err){ msg.textContent = txt; } }
+
+/* ---------- Events: build ---------- */
+document.addEventListener("click", function(e){
+  var t = e.target.closest("button"); if(!t) return;
+  if(t.dataset.use){ S.use=t.dataset.use; S.v=0; S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
+  else if(t.dataset.level){ S.level=t.dataset.level; S.v=0; S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
+  else if(t.dataset.gpupref){ S.gpuPref=t.dataset.gpupref; S.v=0; S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
+  else if(t.dataset.cpupref){ S.cpuPref=t.dataset.cpupref; S.v=0; S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
+  else if(t.dataset.mode){ S.mode=t.dataset.mode; S.picks={}; save(); renderUse(); renderParts(); renderTotal(); }
+  else if(t.dataset.asm){ S.asm=t.dataset.asm; save(); renderAssembly(); }
+  else if(t.id==="again"){ S.v=(S.v+1) % (S.vcount||1); S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
+  else if(t.id==="theme"){ S.theme = S.theme==="auto" ? "light" : (S.theme==="light" ? "dark" : "auto"); save(); applyTheme(); }
+  else if(t.id==="open-glossary"){ showTab("glossary"); }
+  else if(t.dataset.term && t.dataset.tk){ var k=t.dataset.tk, tt=t.dataset.term; S.term = (S.term && S.term.k===k && S.term.t===tt) ? null : {k:k,t:tt}; renderParts(); }
+  else if(t.dataset.term){ showTab("glossary"); var it=document.getElementById("gl-"+t.dataset.term); if(it) it.scrollIntoView(); }
+  else if(t.dataset.open){ S.open = S.open===t.dataset.open ? null : t.dataset.open; renderParts(); }
+  else if(t.dataset.pick){ S.picks[t.dataset.pick]=t.dataset.key; save(); renderParts(); renderTotal(); }
+  else if(t.dataset.swap){ S.build[t.dataset.swap]=t.dataset.id; delete S.picks[t.dataset.swap]; S.open=null; if(t.dataset.swap==="gpu"){ S.build.monitor = periphFor(S.build).monitor; } save(); renderParts(); renderChecks(); renderTotal(); renderGuide(); }
+  else if(t.dataset.tab){ showTab(t.dataset.tab); }
+  else if(t.id==="pb-go"){ var sm=document.getElementById("summary"); if(sm) sm.scrollIntoView({behavior:"smooth", block:"start"}); }
+});
+document.getElementById("eilat").addEventListener("change", function(e){ S.eilat=e.target.checked; save(); renderParts(); renderTotal(); });
+document.getElementById("abroad").addEventListener("change", function(e){ S.abroad=e.target.checked; save(); renderParts(); renderTotal(); });
+document.getElementById("periph").addEventListener("change", function(e){ S.periph=e.target.checked; save(); renderParts(); renderTotal(); });
+document.getElementById("copy").addEventListener("click", function(){ copyText(buildText(), document.getElementById("copy-msg"), "הועתק. אפשר להדביק בוואטסאפ."); });
+document.getElementById("share").addEventListener("click", async function(){
+  var msg=document.getElementById("copy-msg");
+  if(!db){
+    var hl = location.origin + location.pathname + shareHash();
+    if(navigator.share){ try{ await navigator.share({title:"המחשב שלי בפקיל", text:"תראו את המחשב שבניתי:", url:hl}); msg.textContent=""; return; }catch(err){ if(err && err.name==="AbortError") return; } }
+    copyText(hl, msg, "הקישור הועתק. אפשר להדביק בוואטסאפ.");
+    return;
+  }
+  msg.textContent="יוצר קישור...";
+  try{
+    var sid = (Date.now().toString(36)+Math.random().toString(36).slice(2,10)).replace(/[^a-z0-9]/g,"");
+    var ref = db.doc("shared/"+sid);
+    await ref.set({build:S.build, picks:S.picks, mode:S.mode, use:S.use, level:S.level, eilat:S.eilat, periph:S.periph, asm:S.asm, createdAt:new Date().toISOString()});
+    var link = ART_URL+"#b"+sid;
+    copyText(link, msg, "הקישור הועתק: "+link+" (מי שמקבל צריך גישה לפקיל)");
+  }catch(err){ msg.textContent="לא הצלחתי ליצור קישור. אפשר להעתיק כטקסט."; }
+});
+document.getElementById("alert-save").addEventListener("click", async function(){
+  var m=document.getElementById("alert-msg"), target=Number((document.getElementById("alert-target").value||"").replace(/[^\d.]/g,""));
+  if(!(target>0)){ m.textContent="כתבו סכום, למשל 7500."; return; }
+  if(!db || !uid){ m.textContent="התראות לא זמינות כאן כרגע."; return; }
+  var t=totalNow();
+  try{
+    await db.doc("data/users/"+uid+"/alert-"+Date.now()).set({type:"alert", target:target, build:S.build, periph:S.periph, eilat:S.eilat, abroad:S.abroad, startTotal:t.sum, createdAt:new Date().toISOString()});
+    m.textContent = t.sum && t.sum<=target ? "נשמר. המחשב כבר עכשיו מתחת לסכום הזה ("+money(t.sum)+")." : "נשמר. נבדוק כל בוקר"+(isOwner?" ונשלח לך מייל":"")+" כשהמחשב יורד מתחת ל-"+money(target)+".";
+  }catch(err){ m.textContent="לא נשמר. נסו שוב."; }
+});
+
+function shareHash(){
+  var o={b:S.build,p:S.picks,m:S.mode,u:S.use,l:S.level,e:S.eilat?1:0,ph:S.periph?1:0,a:S.asm};
+  return "#s="+btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function applyShared(v){
+  var nb = Object.assign({}, periphFor(v.build||{}), v.build||{});
+  if(!validBuild(nb)) return;
+  S.build=nb; S.picks=v.picks||{}; S.mode=v.mode||"cheap"; S.use=PRESETS[v.use]?v.use:S.use; S.level=(PRESETS[S.use]&&PRESETS[S.use][v.level])?v.level:S.level; S.eilat=!!v.eilat; S.periph=!!v.periph; S.asm=v.asm||S.asm;
+  var bn=document.getElementById("shared-banner"); bn.hidden=false; bn.textContent="זה מחשב ששיתפו איתכם. אפשר לשנות בו כל דבר, ומה שתשנו יישמר אצלכם.";
+  save(); renderBuild();
+}
+function loadStatic(){
+  document.body.classList.add("static");
+  var hm=(location.hash||"").match(/^#s=([A-Za-z0-9_-]+)$/);
+  if(hm){ try{ var j=JSON.parse(decodeURIComponent(escape(atob(hm[1].replace(/-/g,"+").replace(/_/g,"/"))))); applyShared({build:j.b,picks:j.p,mode:j.m,use:j.u,level:j.l,eilat:j.e,periph:j.ph,asm:j.a}); }catch(err){} }
+  fetch("data/offers.json",{cache:"no-cache"}).then(function(r){ return r.json(); }).then(function(list){
+    OFFERS={};
+    (list||[]).forEach(function(v){ if(v && v.kind && v.cls){ (OFFERS[v.kind+":"+v.cls]=OFFERS[v.kind+":"+v.cls]||[]).push(v); } });
+    renderUse(); renderParts(); renderTotal();
+  }).catch(function(){ document.getElementById("total-note").textContent="לא הצלחנו לטעון מחירים. בדקו את החיבור לאינטרנט ונסו שוב."; });
+  fetch("data/history.json",{cache:"no-cache"}).then(function(r){ return r.ok ? r.json() : {}; }).then(function(h){ HISTORY=h||{}; if(S.open) renderParts(); }).catch(function(){});
+}
+function showTab(id){
+  if(id==="admin" && !isOwner) id="build";
+  ["build","check","upgrade","ask","admin","glossary"].forEach(function(v){ var el=document.getElementById("v-"+v); if(el) el.hidden = v!==id; });
+  document.querySelectorAll("[data-tab]").forEach(function(b){ b.setAttribute("aria-selected", String(b.dataset.tab===id)); });
+  if(id==="admin") renderAdmin();
+  if(id==="glossary") renderGlossary();
+  try{ window.scrollTo(0,0); }catch(e){}
+}
+function renderGlossary(){
+  document.getElementById("glossary-list").innerHTML = GLOSSARY.map(function(g){ return '<div class="gl-item" id="gl-'+esc(g.t)+'"><b>'+esc(g.t)+'</b><span>'+esc(g.d)+'</span></div>'; }).join("");
+}
+
+/* ---------- Claude: offer check, upgrade, questions ---------- */
+function catalogBrief(){
+  return Object.keys(CAT).map(function(k){ return k+": "+CAT[k].map(function(p){ var o=isFree(k,p.id)?[]:offers(k,p.id); return p.name+(o.length?" (הזול: "+o[0].model+" "+money(o[0].price)+" "+inStore(o[0].store.name)+")":""); }).join("; "); }).join("\n");
+}
+function buildBrief(){ return activeKinds().map(function(kd){ var c=chosen(kd.k); return kd.name+": "+(c? c.model+" "+money(c.price) : part(kd.k).name); }).join("\n"); }
+var RULES = "אתה היועץ של פקיל, אתר חינמי בעברית שעוזר לאנשים בלי ידע טכני לקנות מחשב בלי שיעבדו עליהם. כתוב בעברית פשוטה, קצר, בלי מונחים מיותרים, כמו חבר שמבין במחשבים. כשאתה משתמש במונח טכני, הסבר אותו במילים פשוטות. אל תמציא מחירים: השתמש רק במחירים שמופיעים במידע למטה, ואם אין מחיר, אמור שאין לך מחיר עדכני. אל תשתמש בכוכביות, בכותרות או בעיצוב Markdown; טקסט רגיל בלבד, שורה לכל נקודה.";
+function hideAI(){ ["check-off","ask-off"].forEach(function(id){ document.getElementById(id).hidden=false; }); document.getElementById("ask-form").hidden=true; document.getElementById("img-row").hidden=true; }
+var offerImg = null;
+document.getElementById("offer-img").addEventListener("change", function(e){
+  offerImg = e.target.files && e.target.files[0] || null;
+  var pv=document.getElementById("offer-img-preview");
+  document.getElementById("offer-img-name").textContent = offerImg ? offerImg.name : "";
+  if(offerImg){ try{ pv.src = URL.createObjectURL(offerImg); pv.hidden=false; }catch(err){ pv.hidden=true; } } else pv.hidden=true;
+});
+var checkCtl=null;
+document.getElementById("check-go").addEventListener("click", async function(){
+  var txt = document.getElementById("offer").value.trim();
+  var out = document.getElementById("check-out"), go=this, stop=document.getElementById("check-stop");
+  if(!txt && !offerImg){ out.hidden=false; out.textContent="הדביקו את ההצעה בתיבה, או צרפו צילום מסך שלה."; return; }
+  if(!sample){ document.getElementById("check-off").hidden=false; return; }
+  var opts = {onText:function(u){ out.textContent=u.text; }};
+  if(offerImg){
+    var lim = await sample.limits().catch(function(){ return null; });
+    if(!lim || !lim.images){ out.hidden=false; out.textContent="כאן אי אפשר לשלוח תמונה. העתיקו את הטקסט של ההצעה לתיבה."; return; }
+    opts.images = offerImg;
+  }
+  checkCtl = new AbortController(); opts.signal = checkCtl.signal; go.disabled=true; stop.hidden=false; out.hidden=false; out.textContent="בודקים...";
+  var prompt = RULES + "\n\nמשימה: עבור על ההצעה שקיבל המשתמש"+(offerImg?" (מצורף צילום מסך שלה; קרא ממנו את החלקים והמחיר)":"")+". לכל רכיב: אם הוא בסדר, או מה הבעיה ולמה. ציין רכיבים חסרים או לא מפורטים (למשל ספק כוח בלי שם, זיכרון בכרטיס אחד, דגם מדור קודם). בדוק התאמה בין החלקים. בסוף: שורה אחת של שורה תחתונה, והאם המחיר נראה הוגן ביחס למחירים שלנו אם יש כאלה.\n\nהחלקים והמחירים שיש לנו כרגע:\n"+catalogBrief()+"\n\nההצעה:\n"+(txt?txt.slice(0,6000):"(בצילום המסך)");
+  try{ await sample(prompt, opts); }
+  catch(err){
+    out.textContent = err && err.text ? err.text : "";
+    if(err && (err.code==="not_granted" || err.code==="sampling_disabled")){ document.getElementById("check-off").hidden=false; out.hidden=true; }
+    else if(err && err.code==="image_rejected") out.textContent += "\n\nאת התמונה הזו אי אפשר לקרוא. נסו צילום מסך אחר, או העתיקו את הטקסט.";
+    else if(err && err.code==="rate_limited") out.textContent += "\n\nיותר מדי בדיקות בזמן קצר. נסו שוב בעוד כמה דקות.";
+    else if(err && err.code!=="cancelled") out.textContent += "\n\nהבדיקה נקטעה. אפשר לנסות שוב.";
+  }finally{ go.disabled=false; stop.hidden=true; }
+});
+document.getElementById("check-stop").addEventListener("click", function(){ if(checkCtl) checkCtl.abort(); });
+
+var upCtl=null;
+document.getElementById("up-go").addEventListener("click", async function(){
+  var have=document.getElementById("up-have").value.trim(), goal=document.getElementById("up-goal").value.trim(), budget=document.getElementById("up-budget").value.trim();
+  var out=document.getElementById("up-out"), go=this, stop=document.getElementById("up-stop");
+  out.hidden=false;
+  if(!have){ out.textContent="כתבו קודם מה יש במחשב היום, גם אם רק חלק."; return; }
+  if(!sample){ out.textContent="הייעוץ לא זמין כאן כרגע."; return; }
+  upCtl=new AbortController(); go.disabled=true; stop.hidden=false; out.textContent="חושבים...";
+  var prompt = RULES+"\n\nמשימה: המשתמש רוצה לשדרג מחשב קיים במקום לקנות חדש. אמור מה הכי שווה להחליף, לפי סדר עדיפות, ובכמה, מתוך החלקים והמחירים שלנו בלבד. בדוק התאמה למה שיש לו: סוג שקע המעבד, סוג הזיכרון (DDR4 או DDR5), כוח הספק, וגודל המארז אם רלוונטי. אם מעבד חדש מחייב גם לוח וזיכרון חדשים, תגיד את זה במפורש ותחשב את הכל ביחד. אם השדרוג לא משתלם לעומת מחשב חדש, תגיד בכנות. מה אפשר להשאיר מהמחשב הישן. סיים בשורה אחת: סך הכל לשדרוג.\n\nמה יש לו היום:\n"+have.slice(0,3000)+"\n\nמה מפריע או מה הוא רוצה: "+(goal||"לא צוין")+"\nתקציב: "+(budget||"לא צוין")+"\n\nהחלקים והמחירים שלנו:\n"+catalogBrief();
+  try{ await sample(prompt, {signal:upCtl.signal, onText:function(u){ out.textContent=u.text; }}); }
+  catch(err){ out.textContent = (err && err.text ? err.text+"\n\n" : "") + (err && err.code==="cancelled" ? "" : "לא הצלחנו לסיים. נסו שוב."); }
+  finally{ go.disabled=false; stop.hidden=true; }
+});
+document.getElementById("up-stop").addEventListener("click", function(){ if(upCtl) upCtl.abort(); });
+
+var turns=[]; var askBusy=false;
+function addMsg(who, text){ var d=document.createElement("div"); d.className="msg "+who; d.textContent=text; document.getElementById("chat").appendChild(d); return d; }
+async function ask(q){
+  if(askBusy || !q.trim()) return;
+  if(!sample){ document.getElementById("ask-off").hidden=false; return; }
+  askBusy=true; document.getElementById("ask-go").disabled=true;
+  addMsg("me", q); var bubble=addMsg("ai","חושב...");
+  turns.push({role:"user", content:q});
+  var head = {role:"user", content: RULES+"\n\nענה על שאלות של משתמש שבונה מחשב. המחשב שהוא בנה כרגע:\n"+buildBrief()+"\n\nהחלקים והמחירים שיש לנו:\n"+catalogBrief()+"\n\nענה קצר, עד 6 שורות, אלא אם ביקשו פירוט."};
+  try{
+    var r = await sample([head].concat(turns.slice(-8)), {cache:false, onText:function(u){ bubble.textContent=u.text; }});
+    turns.push({role:"assistant", content:r.text});
+  }catch(err){
+    bubble.textContent = err && err.text ? err.text : "לא הצלחתי לענות כרגע. נסו שוב בעוד רגע.";
+    if(err && (err.code==="not_granted"||err.code==="sampling_disabled")){ document.getElementById("ask-off").hidden=false; }
+    turns.pop();
+  }finally{ askBusy=false; document.getElementById("ask-go").disabled=false; }
+}
+document.getElementById("ask-form").addEventListener("submit", function(e){ e.preventDefault(); var i=document.getElementById("ask-in"); var q=i.value; i.value=""; ask(q); });
+document.getElementById("suggest").addEventListener("click", function(e){ var b=e.target.closest("button"); if(b) ask(b.textContent); });
+
+/* ---------- Admin: offers (owner only) ---------- */
+function renderAdmin(){
+  var el=document.getElementById("admin-list");
+  var html = '<div class="admin-part"><h2>להוסיף דגם</h2><div class="admin-grid" style="grid-template-columns:90px minmax(0,1fr)">'+
+    '<label for="n-cls">חלק</label><select id="n-cls" class="input" style="padding:8px">'+Object.keys(CAT).map(function(k){ return CAT[k].filter(function(p){return !isFree(k,p.id);}).map(function(p){ return '<option value="'+k+':'+p.id+'">'+esc(p.name)+'</option>'; }).join(""); }).join("")+'</select>'+
+    '<label for="n-store">חנות</label><select id="n-store" class="input" style="padding:8px">'+STORES.map(function(s){ return '<option value="'+s.id+'">'+esc(s.name)+'</option>'; }).join("")+'</select>'+
+    '<label for="n-model">דגם</label><input id="n-model" placeholder="למשל Sapphire PULSE RX 9060 XT 16GB">'+
+    '<label for="n-price">מחיר</label><input id="n-price" inputmode="numeric">'+
+    '<label for="n-eilat">מחיר אילת</label><input id="n-eilat" inputmode="numeric">'+
+    '<label for="n-war">אחריות</label><input id="n-war" placeholder="למשל 3 שנים">'+
+    '<label for="n-url">קישור</label><input id="n-url" dir="ltr" placeholder="https://">'+
+    '</div><button type="button" class="linkbtn" id="n-add">להוסיף</button> <span class="small" id="n-msg" aria-live="polite"></span></div>';
+  html += Object.keys(CAT).map(function(k){
+    var kd = KINDS.filter(function(x){return x.k===k;})[0];
+    return '<h2 class="block">'+esc(kd.name)+'</h2>'+CAT[k].filter(function(p){return !isFree(k,p.id);}).map(function(p){
+      var list = (OFFERS[k+":"+p.id]||[]).slice().sort(function(a,b){return a.price-b.price;});
+      return '<div class="admin-part"><div class="pick">'+esc(p.name)+'</div>'+(list.length?'':'<div class="small">עוד אין דגמים</div>')+list.map(function(o){
+        var id=o._key;
+        return '<div class="admin-grid" style="grid-template-columns:minmax(0,1.6fr) repeat(2,minmax(0,1fr))"><span class="small" style="grid-column:1/-1;margin-top:6px"><b>'+esc(o.model)+'</b> · '+esc((STORE_BY[o.store]||{}).name||o.store)+(o.inStock===false?' · לא במלאי':'')+' · נבדק '+esc(dateTxt(o.updatedAt))+'</span>'+
+          '<span class="small">מחיר / אילת</span><input id="p-'+esc(id)+'" inputmode="numeric" aria-label="מחיר" value="'+esc(o.price||"")+'"><input id="e-'+esc(id)+'" inputmode="numeric" aria-label="מחיר אילת" value="'+esc(o.eilat||"")+'">'+
+          '<span style="grid-column:1/-1"><button type="button" class="linkbtn" data-osave="'+esc(id)+'">לשמור</button> <button type="button" class="linkbtn" data-ostock="'+esc(id)+'">'+(o.inStock===false?'חזר למלאי':'אזל מהמלאי')+'</button> <span class="small" id="m-'+esc(id)+'" aria-live="polite"></span></span></div>';
+      }).join("")+'</div>';
+    }).join("");
+  }).join("");
+  el.innerHTML = html;
+}
+function findOffer(id){ var f=null; Object.keys(OFFERS).forEach(function(k){ OFFERS[k].forEach(function(o){ if(o._key===id) f=o; }); }); return f; }
+function num(v){ return Number(String(v||"").replace(/[^\d.]/g,"")); }
+document.getElementById("admin-list").addEventListener("click", async function(e){
+  var b=e.target.closest("button"); if(!b||!db) return;
+  if(b.id==="n-add"){
+    var cls=document.getElementById("n-cls").value.split(":"), store=document.getElementById("n-store").value, model=document.getElementById("n-model").value.trim();
+    var price=num(document.getElementById("n-price").value), eilat=num(document.getElementById("n-eilat").value), url=document.getElementById("n-url").value.trim(), war=document.getElementById("n-war").value.trim();
+    var msg=document.getElementById("n-msg");
+    if(!model || !(price>0)){ msg.textContent="צריך לפחות דגם ומחיר."; return; }
+    var slug=(store+"_"+cls[0]+"_"+model).toLowerCase().replace(/[^a-z0-9]+/g,"-").slice(0,120);
+    var docBody={kind:cls[0], cls:cls[1], store:store, model:model, brand:model.split(" ")[0], price:price, inStock:true, updatedAt:new Date().toISOString()};
+    if(eilat>0) docBody.eilat=eilat; if(safeUrl(url)) docBody.url=url; if(war) docBody.warranty=war;
+    msg.textContent="שומר...";
+    try{ await db.doc("offers/"+slug).set(docBody); msg.textContent="נוסף"; }catch(err){ msg.textContent="לא נשמר. נסו שוב."; }
+    return;
+  }
+  var id = b.dataset.osave || b.dataset.ostock; if(!id) return;
+  var o=findOffer(id); if(!o) return;
+  var m=document.getElementById("m-"+id); m.textContent="שומר...";
+  var patch = {updatedAt:new Date().toISOString()};
+  if(b.dataset.osave){ var p=num(document.getElementById("p-"+id).value), ei=num(document.getElementById("e-"+id).value); if(p>0) patch.price=p; if(ei>0) patch.eilat=ei; }
+  else patch.inStock = o.inStock===false;
+  try{ await db.doc("offers/"+id).update(patch); m.textContent="נשמר"; }catch(err){ m.textContent = err && err.code==="invalid_argument" ? "אין לך הרשאה לשמור כאן." : "לא נשמר. נסו שוב."; }
+});
+
+function applyTheme(){
+  var r = document.documentElement;
+  if(S.theme==="auto") r.removeAttribute("data-theme"); else r.setAttribute("data-theme", S.theme);
+  document.getElementById("theme-label").textContent = S.theme==="auto" ? "אוטומטי" : (S.theme==="light" ? "בהיר" : "כהה");
+  document.getElementById("theme").setAttribute("aria-label", "מצב תצוגה: "+document.getElementById("theme-label").textContent+". לחצו להחלפה");
+}
+function validBuild(b){ return b && KINDS.every(function(kd){ return BY[kd.k+":"+b[kd.k]]; }); }
+
+/* ---------- Boot ---------- */
+load();
+applyTheme();
+if(!PRESETS[S.use]) S.use="game";
+if(!PRESETS[S.use][S.level]) S.level="mid";
+if(!S.picks || typeof S.picks!=="object") S.picks={};
+var keep = S.build; S.build = preset();
+if(keep){ var kp = Object.assign({}, periphFor(keep), keep); if(validBuild(kp)) S.build = kp; }
+renderBuild();
+if(S.gpuPref!=="any" || S.cpuPref!=="any") document.getElementById("more-prefs").open = true;
+(function(){
+  var bar=document.getElementById("pricebar"), sm=document.getElementById("summary");
+  if(!("IntersectionObserver" in window) || !bar || !sm) return;
+  new IntersectionObserver(function(es){ es.forEach(function(e){ bar.style.visibility = e.isIntersecting ? "hidden" : "visible"; }); }).observe(sm);
+})();
+
+(async function(){
+  if(!window.claude || !window.claude.use) { hideAI(); loadStatic(); return; }
+  claude.use("sample").then(function(s){
+    sample=s; if(!s){ hideAI(); document.getElementById("img-row").hidden=true; return; }
+    s.limits().then(function(l){ if(!l || !l.images){ document.getElementById("img-row").hidden=true; } else { document.getElementById("offer-img").accept = l.images.mediaTypes.join(","); } }, function(){ document.getElementById("img-row").hidden=true; });
+  });
+  var u = await claude.use("user");
+  if(u){ isOwner = await u.isOwner(); uid = await u.id(); if(isOwner){ document.getElementById("tab-admin").hidden=false; document.getElementById("alert-box").hidden=false; } }
+  db = await claude.use("db");
+  if(!db) return;
+  db.collection("offers").limit(1000).onSnapshot(function(snap){
+    OFFERS={};
+    snap.docs.forEach(function(d){ var v=d.data(); if(v && v.kind && v.cls){ var o=Object.assign({_key:d.id}, v); (OFFERS[v.kind+":"+v.cls]=OFFERS[v.kind+":"+v.cls]||[]).push(o); } });
+    renderUse(); renderParts(); renderTotal(); if(isOwner && document.getElementById("v-admin").hidden) renderAdmin();
+  }, function(){});
+  db.collection("history").limit(1000).onSnapshot(function(snap){
+    HISTORY={};
+    snap.docs.forEach(function(d){ var v=d.data(); if(v && v.points) HISTORY[d.id]=v.points; });
+    if(S.open) renderParts();
+  }, function(){});
+  var m = (location.hash||"").match(/^#b([A-Za-z0-9]{6,})$/);
+  if(m){
+    try{
+      var snap = await db.doc("shared/"+m[1]).get();
+      if(snap.exists) applyShared(snap.data());
+    }catch(err){}
+  }
+})();
+})();
+</script>
+
+<script>if("serviceWorker" in navigator){ window.addEventListener("load", function(){ navigator.serviceWorker.register("sw.js").catch(function(){}); }); }</script>
+</body>
+</html>
