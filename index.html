@@ -95,6 +95,7 @@ a{color:var(--pen)}
 .trend{font-size:12px;font-weight:700}
 .trend.down{color:var(--good)}.trend.up{color:var(--red)}
 .alert-box{display:flex;flex-direction:column;gap:6px;border-top:1px solid var(--line);padding-top:12px}
+.about h2{font-size:18px;margin:18px 0 4px}.about p{margin:0 0 8px;color:var(--ink-2)}
 .gl-item{padding:10px 0;border-bottom:1px solid var(--line)}
 .gl-item b{display:block;font-size:16px}
 .gl-item span{font-size:15px;color:var(--ink-2)}
@@ -316,6 +317,26 @@ textarea{resize:vertical;min-height:130px}
     <div id="glossary-list"></div>
   </section>
 
+  <section id="v-about" aria-labelledby="h-about" hidden>
+    <h1 id="h-about">מי אנחנו, ומה חשוב לדעת</h1>
+    <p class="lead">פקיל הוא אתר חינמי שעוזר לבנות מחשב בלי שיעבדו עליכם. אין לנו מה למכור לכם.</p>
+    <div class="about">
+      <h2>מי עומד מאחורי פקיל</h2>
+      <p>פקיל הוקם על ידי מור משה, כפרויקט אישי וחינמי. אין לפקיל קשר עסקי לאף חנות. אף חנות לא משלמת לנו, ואנחנו לא מקבלים עמלה על קנייה. סדר המחירים נקבע רק לפי המחיר.</p>
+      <h2>מאיפה המחירים</h2>
+      <p>כל בוקר אנחנו בודקים את דף המוצר של כל חלק באתר החנות, ושומרים את המחיר שמופיע שם. ליד כל מחיר כתוב מתי הוא נבדק. כרגע יש מחירים מ-TMS, STO מחשבים ו-King Games. חנויות שלא מאפשרות לקרוא את האתר שלהן לא מופיעות, עד שיתנו אישור.</p>
+      <p><b>המחיר הקובע הוא תמיד המחיר באתר החנות.</b> מחירים משתנים במהלך היום, ויכולות להיות טעויות. לפני שקונים, בדקו בדף המוצר את המחיר, את המלאי ואת האחריות.</p>
+      <h2>ההמלצות</h2>
+      <p>ההרכבות והבדיקות שלנו נבנו בזהירות: התאמת מעבד ולוח, זיכרון, ספק כוח, קירור ומארז. ועדיין, זה מידע כללי ולא ייעוץ מקצועי. האחריות על הקנייה וההרכבה היא שלכם, ושל החנות לגבי המוצרים שהיא מוכרת.</p>
+      <h2>פרטיות</h2>
+      <p>אין הרשמה ואין חשבונות. מה שבוחרים באתר נשמר רק בדפדפן שלכם. קישור שיתוף מכיל את המחשב שבחרתם, ולא שום פרט אישי. אנחנו לא משתמשים בעוגיות מעקב ולא אוספים נתוני גלישה. האתר מאוחסן ב-GitHub Pages והגופנים נטענים מ-Google Fonts, ולכן השירותים האלה עשויים לראות את כתובת ה-IP שלכם, כמו בכל אתר.</p>
+      <h2>נגישות</h2>
+      <p>אנחנו רוצים שכל אחד יוכל להשתמש בפקיל. מה שעשינו: אפשר להשתמש בכל האתר עם מקלדת בלבד, הכפתורים מסומנים לקוראי מסך, יש מצב כהה וניגודיות גבוהה, והטקסט מתאים להגדלה בדפדפן. עוד לא עשינו בדיקת נגישות מלאה על ידי מומחה. נתקלתם בבעיה? כתבו לנו ונתקן.</p>
+      <h2>יצירת קשר</h2>
+      <p>טעות במחיר, חנות שרוצה להצטרף, בעיית נגישות או סתם רעיון: <a href="mailto:pciladd@gmail.com">pciladd@gmail.com</a></p>
+    </div>
+  </section>
+
   <section id="v-ask" aria-labelledby="h-ask" hidden>
     <h1 id="h-ask">שאלו</h1>
     <p class="lead">כל שאלה, בלי להתבייש. התשובות מתייחסות למחשב שבניתם בלשונית "בנה מחשב".</p>
@@ -342,7 +363,7 @@ textarea{resize:vertical;min-height:130px}
     <div id="admin-list"></div>
   </section>
 
-  <p class="trust">פקיל חינמי לגמרי. בלי פרסומות, בלי עמלות מחנויות. ליד כל מחיר כתוב מתי הוא נבדק. המחיר הקובע הוא המחיר בחנות.</p>
+  <p class="trust">פקיל חינמי לגמרי. בלי פרסומות, בלי עמלות מחנויות. ליד כל מחיר כתוב מתי הוא נבדק. המחיר הקובע הוא המחיר בחנות. <button type="button" class="linkbtn" id="open-about" style="min-height:0;padding:0">מי אנחנו, פרטיות ונגישות</button></p>
 </main>
 
 <nav class="tabs" aria-label="ניווט">
@@ -796,6 +817,7 @@ document.addEventListener("click", function(e){
   else if(t.id==="again"){ S.v=(S.v+1) % (S.vcount||1); S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
   else if(t.id==="theme"){ S.theme = S.theme==="auto" ? "light" : (S.theme==="light" ? "dark" : "auto"); save(); applyTheme(); }
   else if(t.id==="open-glossary"){ showTab("glossary"); }
+  else if(t.id==="open-about"){ showTab("about"); }
   else if(t.dataset.term && t.dataset.tk){ var k=t.dataset.tk, tt=t.dataset.term; S.term = (S.term && S.term.k===k && S.term.t===tt) ? null : {k:k,t:tt}; renderParts(); }
   else if(t.dataset.term){ showTab("glossary"); var it=document.getElementById("gl-"+t.dataset.term); if(it) it.scrollIntoView(); }
   else if(t.dataset.open){ S.open = S.open===t.dataset.open ? null : t.dataset.open; renderParts(); }
@@ -860,7 +882,7 @@ function loadStatic(){
 }
 function showTab(id){
   if(id==="admin" && !isOwner) id="build";
-  ["build","check","upgrade","ask","admin","glossary"].forEach(function(v){ var el=document.getElementById("v-"+v); if(el) el.hidden = v!==id; });
+  ["build","check","upgrade","ask","admin","glossary","about"].forEach(function(v){ var el=document.getElementById("v-"+v); if(el) el.hidden = v!==id; });
   document.querySelectorAll("[data-tab]").forEach(function(b){ b.setAttribute("aria-selected", String(b.dataset.tab===id)); });
   if(id==="admin") renderAdmin();
   if(id==="glossary") renderGlossary();
