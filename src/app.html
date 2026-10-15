@@ -61,6 +61,8 @@ a{color:var(--pen)}
 .rc-good::before,.rc-warn::before{position:absolute;right:0;font-weight:800}
 .rc-good::before{content:"✓";color:var(--good)}
 .rc-warn{color:var(--ink-2)}.rc-warn::before{content:"!";color:var(--red)}
+.ctag{font-size:11px;font-weight:700;border:1px solid var(--muted);border-radius:3px;padding:0 5px;margin-inline-start:6px;background:#fff;color:#222}
+.color-miss{font-size:13px;color:var(--ink-2);margin:0}
 .rc-tag{font-size:12px;font-weight:700;border-radius:3px;padding:1px 7px;background:var(--marker);color:#222;align-self:flex-start}
 .brand{background:none;border:0;padding:0;cursor:pointer;color:var(--ink)}
 .back{margin-top:14px}
@@ -195,7 +197,7 @@ textarea{resize:vertical;min-height:130px}
     </div>
     <div class="row" style="flex-wrap:nowrap;gap:6px">
     <button type="button" class="theme-btn" id="open-glossary">מילון</button>
-    <button type="button" class="theme-btn" id="theme" aria-label="מצב תצוגה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"></path></svg><span id="theme-label">אוטומטי</span></button>
+    <button type="button" class="theme-btn" id="theme" aria-label="מצב תצוגה"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 3a9 9 0 0 0 0 18z" fill="currentColor"></path></svg><span id="theme-label">מצב כהה</span></button>
     </div>
   </div>
 </header>
@@ -243,6 +245,11 @@ textarea{resize:vertical;min-height:130px}
 
     <div class="prefs">
       <div class="toggle"><input type="checkbox" id="periph"><label for="periph"><b>צריך גם מסך, מקלדת ועכבר</b><small>סמנו אם אין לכם בבית. נוסיף אותם לרשימה ולמחיר.</small></label></div>
+      <div class="row" role="group" aria-labelledby="color-l"><span class="label" id="color-l">צבע המחשב:</span>
+        <div class="seg">
+          <button type="button" data-color="any">לא משנה</button><button type="button" data-color="black">שחור</button><button type="button" data-color="white">לבן</button>
+        </div>
+      </div>
       <details class="more-prefs" id="more-prefs"><summary>יש לכם העדפה ליצרן? (לא חובה)</summary>
       <div class="row"><span class="label" id="gpu-pref-l">כרטיס מסך:</span>
         <div class="seg" role="group" aria-labelledby="gpu-pref-l">
@@ -310,11 +317,14 @@ textarea{resize:vertical;min-height:130px}
     <p class="lead">קיבלתם הצעה בפייסבוק, בוואטסאפ או בחנות? הדביקו אותה כאן. נעבור עליה חלק אחרי חלק, ונגיד מה בסדר, מה חסר ואיפה עובדים עליכם.</p>
     <label for="offer" class="label">ההצעה שקיבלתם</label>
     <div class="row" id="img-row" style="margin:6px 0 8px">
-      <label for="offer-img" class="pick-img">לצרף צילום מסך של ההצעה</label>
+      <label for="offer-cam" class="pick-img">לצלם את ההצעה עם המצלמה</label>
+      <input type="file" id="offer-cam" accept="image/*" capture="environment" class="sr-only">
+      <label for="offer-img" class="pick-img">לבחור צילום מסך מהגלריה</label>
       <input type="file" id="offer-img" accept="image/*" class="sr-only">
       <span class="small" id="offer-img-name"></span>
     </div>
-    <img id="offer-img-preview" alt="צילום המסך שצירפתם" hidden style="max-height:180px;border:1px solid var(--line);border-radius:6px;margin-bottom:8px">
+    <p class="small" id="img-tip" style="margin:0 0 8px">מצלמים מסך של מחשב? צלמו ישר מול המסך, בלי השתקפויות, ושכל השורות של המפרט והמחיר ייכנסו לתמונה.</p>
+    <img id="offer-img-preview" alt="התמונה שצירפתם" hidden style="max-height:180px;border:1px solid var(--line);border-radius:6px;margin-bottom:8px">
     <textarea id="offer" rows="8" placeholder="לדוגמה:&#10;מעבד: i5&#10;כרטיס מסך: RTX 4060&#10;זיכרון: 16GB&#10;כונן: 512GB&#10;ספק כוח: 500W&#10;מחיר: ‏4,800 ₪, כולל הרכבה"></textarea>
     <div class="row block">
       <button class="btn" id="check-go" type="button">תבדקו לי את ההצעה</button>
@@ -449,8 +459,8 @@ var CAT = {
     {id:"rtx5090", name:"NVIDIA GeForce RTX 5090", rec:1000, why:"הכי חזק שיש, במחיר בהתאם. רק אם אתם יודעים בדיוק למה אתם צריכים אותו."}
   ],
   mobo:[
-    {id:"a520m", name:"לוח A520M DDR4 (Micro-ATX)", socket:"AM4", ram:"DDR4", form:"mATX", why:"לוח פשוט וזול למעבדי AMD מדור קודם. עובד עם זיכרון DDR4, שזול היום בהרבה."},
-    {id:"h610m-d4", name:"לוח H610M DDR4 (Micro-ATX)", socket:"LGA1700", ram:"DDR4", form:"mATX", why:"לוח בסיסי למעבדי אינטל מדור 12 עד 14, עם זיכרון DDR4 הזול."},
+    {id:"a520m", name:"לוח AM4 עם DDR4 (Micro-ATX)", socket:"AM4", ram:"DDR4", form:"mATX", why:"לוח פשוט וזול למעבדי AMD מדור קודם. עובד עם זיכרון DDR4, שזול היום בהרבה."},
+    {id:"h610m-d4", name:"לוח LGA1700 עם DDR4 (Micro-ATX)", socket:"LGA1700", ram:"DDR4", form:"mATX", why:"לוח בסיסי למעבדי אינטל מדור 12 עד 14, עם זיכרון DDR4 הזול."},
     {id:"b650m", name:"לוח B650M (Micro-ATX)", socket:"AM5", ram:"DDR5", form:"mATX", why:"לוח פשוט ואמין למעבדי AMD. קטן יותר, נכנס לכל מארז."},
     {id:"b650", name:"לוח B650 (ATX)", socket:"AM5", ram:"DDR5", form:"ATX", why:"לוח מלא למעבדי AMD, עם יותר חיבורים ומקום לשדרוגים."},
     {id:"b760m-d5", name:"לוח B760M DDR5 (Micro-ATX)", socket:"LGA1700", ram:"DDR5", form:"mATX", why:"לוח למעבדי אינטל מדור 14. שימו לב לקנות גרסת DDR5."},
@@ -632,13 +642,13 @@ var GLOSSARY = [
   {t:"Hz", re:/\d{2,3} ?hz/i, d:"כמה פעמים בשנייה המסך מתרענן. 144 ומעלה נותן משחקים חלקים. מסך משרדי רגיל הוא 60 או 75."},
   {t:"יבואן", re:/^$/, d:"יבואן רשמי: המוצר יובא דרך הנציגות של החברה בישראל, והאחריות היא דרכם. יבוא מקביל: מוצר מקורי שהובא בדרך אחרת. לפעמים זול יותר, אבל האחריות היא רק של החנות. בכל מקרה, בדקו בדף המוצר כמה שנות אחריות יש ומי נותן אותה."}
 ];
-var S = { type:"build", lapUse:"work", budget:"all", use:"game", level:"mid", build:null, open:null, eilat:false, abroad:false, v:0, gpuPref:"any", cpuPref:"any", theme:"auto", vnote:"", picks:{}, mode:"cheap", asm:"self", periph:false, term:null };
+var S = { color:"any", type:"build", lapUse:"work", budget:"all", use:"game", level:"mid", build:null, open:null, eilat:false, abroad:false, v:0, gpuPref:"any", cpuPref:"any", theme:"light", vnote:"", picks:{}, mode:"cheap", asm:"self", periph:false, term:null };
 var OFFERS = {}; // "kind:cls" -> [offer docs]
 var HISTORY = {}; // offer key -> points
 var sample = null, db = null, isOwner = false, uid = null;
 
-function load(){ try{ var s = JSON.parse(localStorage.getItem("pcil") || "null"); if(s){ ["type","lapUse","budget","use","level","build","v","gpuPref","cpuPref","theme","picks","mode","asm"].forEach(function(k){ if(s[k]!==undefined && s[k]!==null) S[k]=s[k]; }); S.eilat=!!s.eilat; S.abroad=!!s.abroad; S.periph=!!s.periph; } }catch(e){} }
-function save(){ try{ localStorage.setItem("pcil", JSON.stringify({type:S.type,lapUse:S.lapUse,budget:S.budget,use:S.use,level:S.level,build:S.build,eilat:S.eilat,abroad:S.abroad,v:S.v,gpuPref:S.gpuPref,cpuPref:S.cpuPref,theme:S.theme,picks:S.picks,mode:S.mode,asm:S.asm,periph:S.periph})); }catch(e){} }
+function load(){ try{ var s = JSON.parse(localStorage.getItem("pcil") || "null"); if(s){ ["color","type","lapUse","budget","use","level","build","v","gpuPref","cpuPref","theme","picks","mode","asm"].forEach(function(k){ if(s[k]!==undefined && s[k]!==null) S[k]=s[k]; }); S.eilat=!!s.eilat; S.abroad=!!s.abroad; S.periph=!!s.periph; } }catch(e){} }
+function save(){ try{ localStorage.setItem("pcil", JSON.stringify({color:S.color,type:S.type,lapUse:S.lapUse,budget:S.budget,use:S.use,level:S.level,build:S.build,eilat:S.eilat,abroad:S.abroad,v:S.v,gpuPref:S.gpuPref,cpuPref:S.cpuPref,theme:S.theme,picks:S.picks,mode:S.mode,asm:S.asm,periph:S.periph})); }catch(e){} }
 function preset(){ var r = variants(); S.vcount = r.list.length; S.vnote = r.note; var b = Object.assign({}, r.list[S.v % r.list.length]); return Object.assign(b, periphFor(b)); }
 function activeKinds(){ return KINDS.filter(function(kd){ return !kd.optional || S.periph; }); }
 
@@ -680,8 +690,12 @@ function offers(k, cls){
     if(st.abroad && !S.abroad) return false;
     return priceOf(o)>0;
   }).map(function(o){ return {doc:o, store:STORE_BY[o.store], price:priceOf(o), model:o.model, brand:o.brand, url:o.url, key:o._key, updatedAt:o.updatedAt}; })
-    .sort(function(a,b){ return a.price-b.price; });
+    .sort(function(a,b){ return a.price-b.price; })
+    .sort(function(a,b){ if(S.color==="any" || COLOR_KINDS.indexOf(k)<0) return 0; return (colorOf(a)===S.color?0:1) - (colorOf(b)===S.color?0:1); });
 }
+var COLOR_KINDS = ["case","gpu","ram","cooler","psu","mobo"];
+var COLOR_SHOWN = {"case":"מארז", gpu:"כרטיס מסך", ram:"זיכרון", cooler:"קירור"};
+function colorOf(o){ var d=o.doc||o; return d.color || (/white|לבן|\bice\b|snow/i.test(d.model||"") ? "white" : "black"); }
 function oneStore(){
   var need = activeKinds().filter(function(kd){ return !isFree(kd.k, part(kd.k).id); });
   var best=null;
@@ -729,6 +743,7 @@ function renderUse(){
   }).join("");
   document.querySelectorAll("[data-gpupref]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.gpupref===S.gpuPref)); });
   document.querySelectorAll("[data-cpupref]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.cpupref===S.cpuPref)); });
+  document.querySelectorAll("[data-color]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.color===S.color)); });
   document.querySelectorAll("[data-mode]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.mode===S.mode)); });
   document.getElementById("periph").checked = S.periph;
   var reco = S.use==="game"
@@ -761,7 +776,7 @@ function renderParts(){
         body += '<div class="small" style="margin-top:4px">'+list.length+' דגמים מתאימים, מהזול ליקר. כולם מתאימים לשאר המחשב.</div><div class="models">'+list.map(function(o){
           var on = c && o.key===c.key, d=o.doc, extra=[];
           if(d.warranty) extra.push("אחריות "+d.warranty); if(d.importer) extra.push(d.importer);
-          return '<button type="button" class="model" data-pick="'+k+'" data-key="'+esc(o.key)+'" aria-pressed="'+on+'"><span style="min-width:0"><span class="m-name">'+esc(o.model)+'</span><span class="m-sub">'+esc(o.store.name)+(o.store.abroad?' (מחו"ל)':'')+(extra.length?' · '+esc(extra.join(" · ")):'')+(o.updatedAt?' · נבדק '+esc(dateTxt(o.updatedAt)):'')+'</span>'+trendFor(o.key,o.price)+'</span><b>'+money(o.price)+'</b></button>';
+          return '<button type="button" class="model" data-pick="'+k+'" data-key="'+esc(o.key)+'" aria-pressed="'+on+'"><span style="min-width:0"><span class="m-name">'+esc(o.model)+(COLOR_SHOWN[k]&&colorOf(o)==="white"?'<span class="ctag">לבן</span>':'')+'</span><span class="m-sub">'+esc(o.store.name)+(o.store.abroad?' (מחו"ל)':'')+(extra.length?' · '+esc(extra.join(" · ")):'')+(o.updatedAt?' · נבדק '+esc(dateTxt(o.updatedAt)):'')+'</span>'+trendFor(o.key,o.price)+'</span><b>'+money(o.price)+'</b></button>';
         }).join("")+'</div>';
         if(c && safeUrl(c.url)) body += '<div><a class="store-at" href="'+esc(safeUrl(c.url))+'" target="_blank" rel="noopener">לדף של '+esc(c.model)+' '+esc(inStore(c.store.name))+'</a></div>';
       }
@@ -778,6 +793,7 @@ function renderParts(){
     return '<div class="part"><div class="part-head"><div style="min-width:0"><div class="kind"><b>'+esc(kd.name)+'</b>'+tagFor(kd)+'</div><div class="plain">'+esc(kd.plain)+'</div></div><div class="price">'+priceHtml+'</div></div>'+
       '<div class="pick">'+esc(c ? c.model : p.name)+'</div>'+(c?'<div class="small">'+esc(p.name)+'</div>':'')+
       termChips(k, (c?c.model:"")+" "+p.name)+
+      (S.color!=="any" && c && COLOR_SHOWN[k] && colorOf(c)!==S.color ? '<p class="color-miss">אין כרגע '+esc(COLOR_SHOWN[k])+' כזה ב'+(S.color==="white"?"לבן":"שחור")+' בחנויות שבדקנו. זה הכי זול שיש.</p>' : '')+
       '<p class="why">'+esc(why)+'</p>'+
       '<div><button type="button" class="linkbtn" data-open="'+k+'" aria-expanded="'+open+'">'+esc(moreTxt)+'</button></div>'+body+'</div>';
   }).join("");
@@ -804,6 +820,7 @@ function renderTotal(){
     if(t.missing) note += " חסרים מחירים ל-"+t.missing+" חלקים, אז הסכום חלקי.";
   }
   if(t.sum && S.mode!=="one" && names.length>1){ var o1=oneStore(); if(o1 && o1.sum>t.sum) note += " הכל מחנות אחת ("+o1.store.name+") יעלה עוד "+money(o1.sum-t.sum)+"."; }
+  if(t.sum && S.color==="white") note += " בחרנו חלקים לבנים איפה שיש. לבן עולה לפעמים קצת יותר.";
   if(t.sum) note += " לא כולל הרכבה ו-Windows.";
   document.getElementById("total-note").textContent = note;
   document.getElementById("pb-total").textContent = t.sum ? money(t.sum) : "—";
@@ -951,6 +968,7 @@ function copyText(txt, msg, ok){ try{ navigator.clipboard.writeText(txt).then(fu
 document.addEventListener("click", function(e){
   var t = e.target.closest("button"); if(!t) return;
   if(t.dataset.type){ S.type=t.dataset.type; if(S.type!=="build") S.budget="all"; save(); renderType(); try{ document.getElementById("h-build").scrollIntoView({block:"start"}); }catch(e){} }
+  else if(t.dataset.color){ S.color=t.dataset.color; S.picks={}; save(); renderBuild(); }
   else if(t.dataset.lapuse){ S.lapUse=t.dataset.lapuse; S.budget="all"; save(); renderReady(); }
   else if(t.dataset.budget){ S.budget=t.dataset.budget; save(); renderReady(); }
   else if(t.dataset.use){ S.use=t.dataset.use; S.v=0; S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
@@ -960,7 +978,7 @@ document.addEventListener("click", function(e){
   else if(t.dataset.mode){ S.mode=t.dataset.mode; S.picks={}; save(); renderUse(); renderParts(); renderTotal(); }
   else if(t.dataset.asm){ S.asm=t.dataset.asm; save(); renderAssembly(); }
   else if(t.id==="again"){ S.v=(S.v+1) % (S.vcount||1); S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
-  else if(t.id==="theme"){ S.theme = S.theme==="auto" ? "light" : (S.theme==="light" ? "dark" : "auto"); save(); applyTheme(); }
+  else if(t.id==="theme"){ S.theme = S.theme==="dark" ? "light" : "dark"; save(); applyTheme(); }
   else if(t.id==="open-glossary"){ showTab("glossary"); }
   else if(t.id==="open-about"){ showTab("about"); }
   else if(t.dataset.term && t.dataset.tk){ var k=t.dataset.tk, tt=t.dataset.term; S.term = (S.term && S.term.k===k && S.term.t===tt) ? null : {k:k,t:tt}; if(S.type==="build") renderParts(); else renderReady(); }
@@ -987,7 +1005,7 @@ document.getElementById("share").addEventListener("click", async function(){
   try{
     var sid = (Date.now().toString(36)+Math.random().toString(36).slice(2,10)).replace(/[^a-z0-9]/g,"");
     var ref = db.doc("shared/"+sid);
-    await ref.set({build:S.build, picks:S.picks, mode:S.mode, use:S.use, level:S.level, eilat:S.eilat, periph:S.periph, asm:S.asm, createdAt:new Date().toISOString()});
+    await ref.set({color:S.color, build:S.build, picks:S.picks, mode:S.mode, use:S.use, level:S.level, eilat:S.eilat, periph:S.periph, asm:S.asm, createdAt:new Date().toISOString()});
     var link = ART_URL+"#b"+sid;
     copyText(link, msg, "הקישור הועתק: "+link+" (מי שמקבל צריך גישה ל-KisPC)");
   }catch(err){ msg.textContent="לא הצלחתי ליצור קישור. אפשר להעתיק כטקסט."; }
@@ -1004,20 +1022,20 @@ document.getElementById("alert-save").addEventListener("click", async function()
 });
 
 function shareHash(){
-  var o={b:S.build,p:S.picks,m:S.mode,u:S.use,l:S.level,e:S.eilat?1:0,ph:S.periph?1:0,a:S.asm};
+  var o={c:S.color,b:S.build,p:S.picks,m:S.mode,u:S.use,l:S.level,e:S.eilat?1:0,ph:S.periph?1:0,a:S.asm};
   return "#s="+btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 }
 function applyShared(v){
   var nb = Object.assign({}, periphFor(v.build||{}), v.build||{});
   if(!validBuild(nb)) return;
-  S.build=nb; S.picks=v.picks||{}; S.mode=v.mode||"cheap"; S.use=PRESETS[v.use]?v.use:S.use; S.level=(PRESETS[S.use]&&PRESETS[S.use][v.level])?v.level:S.level; S.eilat=!!v.eilat; S.periph=!!v.periph; S.asm=v.asm||S.asm;
+  S.build=nb; S.picks=v.picks||{}; if(v.color) S.color=v.color; S.mode=v.mode||"cheap"; S.use=PRESETS[v.use]?v.use:S.use; S.level=(PRESETS[S.use]&&PRESETS[S.use][v.level])?v.level:S.level; S.eilat=!!v.eilat; S.periph=!!v.periph; S.asm=v.asm||S.asm;
   var bn=document.getElementById("shared-banner"); bn.hidden=false; bn.textContent="זה מחשב ששיתפו איתכם. אפשר לשנות בו כל דבר, ומה שתשנו יישמר אצלכם.";
   save(); renderBuild();
 }
 function loadStatic(){
   document.body.classList.add("static");
   var hm=(location.hash||"").match(/^#s=([A-Za-z0-9_-]+)$/);
-  if(hm){ try{ var j=JSON.parse(decodeURIComponent(escape(atob(hm[1].replace(/-/g,"+").replace(/_/g,"/"))))); applyShared({build:j.b,picks:j.p,mode:j.m,use:j.u,level:j.l,eilat:j.e,periph:j.ph,asm:j.a}); }catch(err){} }
+  if(hm){ try{ var j=JSON.parse(decodeURIComponent(escape(atob(hm[1].replace(/-/g,"+").replace(/_/g,"/"))))); applyShared({color:j.c,build:j.b,picks:j.p,mode:j.m,use:j.u,level:j.l,eilat:j.e,periph:j.ph,asm:j.a}); }catch(err){} }
   fetch("data/offers.json",{cache:"no-cache"}).then(function(r){ return r.json(); }).then(function(list){
     OFFERS={};
     (list||[]).forEach(function(v){ if(v && v.kind && v.cls){ (OFFERS[v.kind+":"+v.cls]=OFFERS[v.kind+":"+v.cls]||[]).push(v); } });
@@ -1043,14 +1061,16 @@ function catalogBrief(){
 }
 function buildBrief(){ return activeKinds().map(function(kd){ var c=chosen(kd.k); return kd.name+": "+(c? c.model+" "+money(c.price) : part(kd.k).name); }).join("\n"); }
 var RULES = "אתה היועץ של KisPC, אתר חינמי בעברית שעוזר לאנשים בלי ידע טכני לקנות מחשב בלי שיעבדו עליהם. כתוב בעברית פשוטה, קצר, בלי מונחים מיותרים, כמו חבר שמבין במחשבים. כשאתה משתמש במונח טכני, הסבר אותו במילים פשוטות. אל תמציא מחירים: השתמש רק במחירים שמופיעים במידע למטה, ואם אין מחיר, אמור שאין לך מחיר עדכני. אל תשתמש בכוכביות, בכותרות או בעיצוב Markdown; טקסט רגיל בלבד, שורה לכל נקודה.";
-function hideAI(){ ["check-off","ask-off"].forEach(function(id){ document.getElementById(id).hidden=false; }); document.getElementById("ask-form").hidden=true; document.getElementById("img-row").hidden=true; }
+function hideAI(){ ["check-off","ask-off"].forEach(function(id){ document.getElementById(id).hidden=false; }); document.getElementById("ask-form").hidden=true; document.getElementById("img-row").hidden=true; document.getElementById("img-tip").hidden=true; }
 var offerImg = null;
-document.getElementById("offer-img").addEventListener("change", function(e){
+function onOfferImage(e){
   offerImg = e.target.files && e.target.files[0] || null;
   var pv=document.getElementById("offer-img-preview");
-  document.getElementById("offer-img-name").textContent = offerImg ? offerImg.name : "";
   if(offerImg){ try{ pv.src = URL.createObjectURL(offerImg); pv.hidden=false; }catch(err){ pv.hidden=true; } } else pv.hidden=true;
-});
+  document.getElementById("offer-img-name").textContent = offerImg ? (offerImg.name && !/^image\.(jpe?g|png)$/i.test(offerImg.name) ? offerImg.name : "התמונה צורפה") : "";
+}
+document.getElementById("offer-img").addEventListener("change", onOfferImage);
+document.getElementById("offer-cam").addEventListener("change", onOfferImage);
 var checkCtl=null;
 document.getElementById("check-go").addEventListener("click", async function(){
   var txt = document.getElementById("offer").value.trim();
@@ -1064,7 +1084,7 @@ document.getElementById("check-go").addEventListener("click", async function(){
     opts.images = offerImg;
   }
   checkCtl = new AbortController(); opts.signal = checkCtl.signal; go.disabled=true; stop.hidden=false; out.hidden=false; out.textContent="בודקים...";
-  var prompt = RULES + "\n\nמשימה: עבור על ההצעה שקיבל המשתמש"+(offerImg?" (מצורף צילום מסך שלה; קרא ממנו את החלקים והמחיר)":"")+". לכל רכיב: אם הוא בסדר, או מה הבעיה ולמה. ציין רכיבים חסרים או לא מפורטים (למשל ספק כוח בלי שם, זיכרון בכרטיס אחד, דגם מדור קודם). בדוק התאמה בין החלקים. בסוף: שורה אחת של שורה תחתונה, והאם המחיר נראה הוגן ביחס למחירים שלנו אם יש כאלה.\n\nהחלקים והמחירים שיש לנו כרגע:\n"+catalogBrief()+"\n\nההצעה:\n"+(txt?txt.slice(0,6000):"(בצילום המסך)");
+  var prompt = RULES + "\n\nמשימה: עבור על ההצעה שקיבל המשתמש"+(offerImg?" (מצורפת תמונה שלה: צילום מסך, או צילום בטלפון של מסך מחשב או של דף מודפס. קרא ממנה את החלקים והמחיר. אם משהו לא קריא, אמור מה בדיוק לא הצלחת לקרוא)":"")+". לכל רכיב: אם הוא בסדר, או מה הבעיה ולמה. ציין רכיבים חסרים או לא מפורטים (למשל ספק כוח בלי שם, זיכרון בכרטיס אחד, דגם מדור קודם). בדוק התאמה בין החלקים. בסוף: שורה אחת של שורה תחתונה, והאם המחיר נראה הוגן ביחס למחירים שלנו אם יש כאלה.\n\nהחלקים והמחירים שיש לנו כרגע:\n"+catalogBrief()+"\n\nההצעה:\n"+(txt?txt.slice(0,6000):"(בצילום המסך)");
   try{ await sample(prompt, opts); }
   catch(err){
     out.textContent = err && err.text ? err.text : "";
@@ -1165,9 +1185,10 @@ document.getElementById("admin-list").addEventListener("click", async function(e
 
 function applyTheme(){
   var r = document.documentElement;
-  if(S.theme==="auto") r.removeAttribute("data-theme"); else r.setAttribute("data-theme", S.theme);
-  document.getElementById("theme-label").textContent = S.theme==="auto" ? "אוטומטי" : (S.theme==="light" ? "בהיר" : "כהה");
-  document.getElementById("theme").setAttribute("aria-label", "מצב תצוגה: "+document.getElementById("theme-label").textContent+". לחצו להחלפה");
+  if(S.theme!=="dark") S.theme="light";
+  r.setAttribute("data-theme", S.theme);
+  document.getElementById("theme-label").textContent = S.theme==="dark" ? "מצב בהיר" : "מצב כהה";
+  document.getElementById("theme").setAttribute("aria-label", (S.theme==="dark" ? "עכשיו במצב כהה. לחצו למצב בהיר" : "עכשיו במצב בהיר. לחצו למצב כהה"));
 }
 function validBuild(b){ return b && KINDS.every(function(kd){ return BY[kd.k+":"+b[kd.k]]; }); }
 
@@ -1191,7 +1212,7 @@ if(S.gpuPref!=="any" || S.cpuPref!=="any") document.getElementById("more-prefs")
   if(!window.claude || !window.claude.use) { hideAI(); loadStatic(); return; }
   claude.use("sample").then(function(s){
     sample=s; if(!s){ hideAI(); document.getElementById("img-row").hidden=true; return; }
-    s.limits().then(function(l){ if(!l || !l.images){ document.getElementById("img-row").hidden=true; } else { document.getElementById("offer-img").accept = l.images.mediaTypes.join(","); } }, function(){ document.getElementById("img-row").hidden=true; });
+    s.limits().then(function(l){ if(!l || !l.images){ document.getElementById("img-row").hidden=true; document.getElementById("img-tip").hidden=true; } else { document.getElementById("offer-img").accept = l.images.mediaTypes.join(","); document.getElementById("offer-cam").accept = l.images.mediaTypes.join(","); } }, function(){ document.getElementById("img-row").hidden=true; });
   });
   var u = await claude.use("user");
   if(u){ isOwner = await u.isOwner(); uid = await u.id(); if(isOwner){ document.getElementById("tab-admin").hidden=false; document.getElementById("alert-box").hidden=false; } }
