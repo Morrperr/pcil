@@ -826,7 +826,7 @@ function termChips(k, text){
   var ts = termsIn(text,k); if(!ts.length) return "";
   var openT = S.term && S.term.k===k ? S.term.t : null;
   var def = openT ? GLOSSARY.filter(function(g){return g.t===openT;})[0] : null;
-  return '<div class="terms" aria-label="מה זה אומר"><span class="terms-l">מה זה?</span>'+ts.map(function(g){ return '<button type="button" class="term" data-tk="'+k+'" data-term="'+esc(g.t)+'" aria-expanded="'+(g.t===openT)+'" aria-label="מה זה '+esc(g.t)+'"><bdi>'+esc(g.t)+'</bdi></button>'; }).join("")+'</div>'+(def?'<div class="term-def">'+esc(def.d)+'</div>':'');
+  return '<div class="terms" aria-label="מה זה אומר"><span class="terms-l">לא מכירים מילה? לחצו עליה להסבר:</span>'+ts.map(function(g){ return '<button type="button" class="term" data-tk="'+k+'" data-term="'+esc(g.t)+'" aria-expanded="'+(g.t===openT)+'" aria-label="מה זה '+esc(g.t)+'"><bdi>'+esc(g.t)+'</bdi></button>'; }).join("")+'</div>'+(def?'<div class="term-def">'+esc(def.d)+'</div>':'');
 }
 function cpuUse(c){
   if(/x3d/i.test(c.id)) return c.cores>=12 ? "משחקים וגם עבודה כבדה" : "הכי טוב למשחקים";
