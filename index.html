@@ -383,7 +383,7 @@ textarea{resize:vertical;min-height:130px}
       <h2>מי עומד מאחורי KisPC</h2>
       <p>KisPC הוקם על ידי מור משה, כפרויקט אישי וחינמי. אין ל-KisPC קשר עסקי לאף חנות. אף חנות לא משלמת לנו, ואנחנו לא מקבלים עמלה על קנייה. סדר המחירים נקבע רק לפי המחיר.</p>
       <h2>מאיפה המחירים</h2>
-      <p>כל בוקר אנחנו בודקים את דף המוצר של כל חלק באתר החנות, ושומרים את המחיר שמופיע שם. ליד כל מחיר כתוב מתי הוא נבדק. כרגע יש מחירים מ-TMS, STO מחשבים ו-King Games. חנויות שלא מאפשרות לקרוא את האתר שלהן לא מופיעות, עד שיתנו אישור.</p>
+      <p>כל בוקר אנחנו בודקים את דף המוצר של כל חלק באתר החנות, ושומרים את המחיר שמופיע שם. ליד כל מחיר כתוב מתי הוא נבדק. כרגע יש מחירים מ-TMS, STO מחשבים, King Games ומחסני חשמל. חנויות שלא מאפשרות לקרוא את האתר שלהן לא מופיעות, עד שיתנו אישור.</p>
       <p><b>המחיר הקובע הוא תמיד המחיר באתר החנות.</b> מחירים משתנים במהלך היום, ויכולות להיות טעויות. לפני שקונים, בדקו בדף המוצר את המחיר, את המלאי ואת האחריות.</p>
       <h2>ההמלצות</h2>
       <p>ההרכבות והבדיקות שלנו נבנו בזהירות: התאמת מעבד ולוח, זיכרון, ספק כוח, קירור ומארז. ועדיין, זה מידע כללי ולא ייעוץ מקצועי. האחריות על הקנייה וההרכבה היא שלכם, ושל החנות לגבי המוצרים שהיא מוכרת.</p>
@@ -626,7 +626,7 @@ function variants(){
 var ART_URL = "https://claude.ai/artifact/WHPrWaFniNapuFM8L6Km5w";
 var STORES = [
   {id:"ksp", name:"KSP"}, {id:"ivory", name:"איבורי"}, {id:"bug", name:"באג"},
-  {id:"tms", name:"TMS"}, {id:"sto", name:"STO מחשבים"}, {id:"kinggames", name:"King Games"}, {id:"pconline", name:"PC-Online"}, {id:"plonter", name:"פלאנטר"}, {id:"amazon", name:"אמזון", abroad:true}
+  {id:"tms", name:"TMS"}, {id:"sto", name:"STO מחשבים"}, {id:"kinggames", name:"King Games"}, {id:"pconline", name:"PC-Online"}, {id:"payngo", name:"מחסני חשמל"}, {id:"plonter", name:"פלאנטר"}, {id:"amazon", name:"אמזון", abroad:true}
 ];
 var STORE_BY = {}; STORES.forEach(function(s){ STORE_BY[s.id]=s; });
 // Our own build service. Prices are easy to change here.
@@ -907,7 +907,7 @@ function renderGuide(){
 var READY_KINDS = {laptop:["laptop"], ready:["minipc","prebuilt"]};
 var BUDGETS = {
   laptop:[{id:"all",name:"הכל"},{id:"0-2500",name:"עד ₪2,500"},{id:"2500-4000",name:"₪2,500 עד ₪4,000"},{id:"4000-6000",name:"₪4,000 עד ₪6,000"},{id:"6000-9000",name:"₪6,000 עד ₪9,000"},{id:"9000-99999",name:"מעל ₪9,000"}],
-  ready:[{id:"all",name:"הכל"},{id:"0-2000",name:"עד ₪2,000"},{id:"2000-3000",name:"₪2,000 עד ₪3,000"},{id:"3000-99999",name:"מעל ₪3,000"}]
+  ready:[{id:"all",name:"הכל"},{id:"0-2000",name:"עד ₪2,000"},{id:"2000-3000",name:"₪2,000 עד ₪3,000"},{id:"3000-5000",name:"₪3,000 עד ₪5,000"},{id:"5000-99999",name:"מעל ₪5,000 (גיימינג)"}]
 };
 function readyItems(){
   var kinds = READY_KINDS[S.type]||[], out=[];
@@ -937,7 +937,7 @@ function readyNotes(o){
   else warn.push("מגיע בלי Windows. צריך להתקין, ורישיון רשמי נקנה בנפרד.");
   if(sp.oled) good.push("מסך OLED: צבעים חיים ושחור עמוק.");
   if(sp.hz>=144) good.push("מסך מהיר ("+sp.hz+"Hz), למשחקים חלקים.");
-  if(sp.touch) good.push("מסך מגע שמתקפל לטאבלט.");
+  if(sp.touch) good.push(/2 ?in ?1/i.test(o.model) ? "מסך מגע שמתקפל לטאבלט." : "מסך מגע.");
   if(sp.kg && sp.kg<=1.5) good.push("קל לנשיאה ("+sp.kg+" ק״ג).");
   if(sp.kg && sp.kg>=2.3) warn.push("כבד יחסית ("+sp.kg+" ק״ג). פחות נוח לסחוב כל יום.");
   if(o.doc.warranty && /^(1 שנה|12)/.test(o.doc.warranty)) warn.push("אחריות שנה אחת בלבד.");
