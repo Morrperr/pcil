@@ -58,7 +58,10 @@ a{color:var(--pen)}
 .top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--paper);border-bottom:1px solid var(--line);border-top:4px solid var(--brand);margin:0 calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-left,0px))}
 .top .wrap{display:flex;align-items:center;justify-content:space-between;gap:12px}
 .brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:22px;letter-spacing:-.3px}
-.brand small{font-size:17px;font-weight:800;background:var(--ink);color:var(--paper);border-radius:4px;padding:0 5px;margin-left:1px;line-height:1.25}
+.brand{background:none;border:0;padding:0;cursor:pointer;color:var(--ink)}
+.back{margin-top:14px}
+.brand .mark{width:30px;height:30px;flex-shrink:0;color:var(--ink)}
+.brand b{color:var(--brand);font-weight:800}
 .tagline{font-size:13px;color:var(--muted)}
 .dot{width:11px;height:11px;background:var(--brand);border-radius:2px;display:inline-block;transform:rotate(45deg)}
 .theme-btn{border:1.5px solid var(--line);background:var(--paper);border-radius:999px;padding:6px 12px;min-height:40px;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px}
@@ -186,7 +189,7 @@ textarea{resize:vertical;min-height:130px}
 <header class="top">
   <div class="wrap">
     <div style="display:flex;flex-direction:column">
-      <div class="brand" dir="ltr"><span class="dot" aria-hidden="true"></span>Kis<small>PC</small></div>
+      <button type="button" class="brand" dir="ltr" data-tab="build" aria-label="KisPC, חזרה לבניית מחשב"><svg class="mark" viewBox="0 0 64 64" aria-hidden="true"><g fill="currentColor"><rect x="21" y="3" width="22" height="22" rx="3"/><path d="M26 0.5v2.5M32 0.5v2.5M38 0.5v2.5M18.5 9h2.5M18.5 15h2.5M43 9h2.5M43 15h2.5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/></g><rect x="26.5" y="8.5" width="11" height="11" rx="1.5" fill="var(--paper)"/><path d="M8 19h48v20c0 9-10 16-24 21C18 55 8 48 8 39z" fill="var(--brand)"/><path d="M12.5 24h39v15c0 6.5-8 12-19.5 16.3C20.5 51 12.5 45.5 12.5 39z" fill="none" stroke="#fff" stroke-width="1.6" stroke-dasharray="3 2.4" opacity=".85"/></svg><span>Kis<b>PC</b></span></button>
       <div class="tagline">מחשב לכל כיס</div>
     </div>
     <div class="row" style="flex-wrap:nowrap;gap:6px">
@@ -267,7 +270,7 @@ textarea{resize:vertical;min-height:130px}
         </div>
         <span class="small" id="alert-msg" aria-live="polite"></span>
       </div>
-      <p class="small" style="margin:0">לפני שקונים: בדקו בדף המוצר כמה שנות אחריות ואם זה יבואן רשמי. <button type="button" class="linkbtn" data-term="יבואן" style="min-height:0;padding:0">מה ההבדל?</button></p>
+      <p class="small" style="margin:0">לפני שקונים: בדקו בדף המוצר כמה שנות אחריות ואם זה יבואן רשמי. <button type="button" class="linkbtn" data-term="יבואן" style="padding:0 4px">מה ההבדל?</button></p>
     </div>
 
     <div class="block">
@@ -312,12 +315,14 @@ textarea{resize:vertical;min-height:130px}
   </section>
 
   <section id="v-glossary" aria-labelledby="h-glossary" hidden>
+    <button type="button" class="linkbtn back" data-tab="build">חזרה לבניית מחשב</button>
     <h1 id="h-glossary">מילון</h1>
     <p class="lead">כל המילים המוזרות שמופיעות בשמות של חלקים, בשורה אחת.</p>
     <div id="glossary-list"></div>
   </section>
 
   <section id="v-about" aria-labelledby="h-about" hidden>
+    <button type="button" class="linkbtn back" data-tab="build">חזרה לבניית מחשב</button>
     <h1 id="h-about">מי אנחנו, ומה חשוב לדעת</h1>
     <p class="lead">KisPC הוא אתר חינמי שעוזר לבנות מחשב בלי שיעבדו עליכם. אין לנו מה למכור לכם.</p>
     <div class="about">
@@ -333,7 +338,7 @@ textarea{resize:vertical;min-height:130px}
       <h2>נגישות</h2>
       <p>אנחנו רוצים שכל אחד יוכל להשתמש ב-KisPC. מה שעשינו: אפשר להשתמש בכל האתר עם מקלדת בלבד, הכפתורים מסומנים לקוראי מסך, יש מצב כהה וניגודיות גבוהה, והטקסט מתאים להגדלה בדפדפן. עוד לא עשינו בדיקת נגישות מלאה על ידי מומחה. נתקלתם בבעיה? כתבו לנו ונתקן.</p>
       <h2>יצירת קשר</h2>
-      <p>טעות במחיר, חנות שרוצה להצטרף, בעיית נגישות או סתם רעיון: <a href="mailto:pciladd@gmail.com">pciladd@gmail.com</a></p>
+      <p>טעות במחיר, חנות שרוצה להצטרף, בעיית נגישות או סתם רעיון: <a href="mailto:kispcoffice@gmail.com">kispcoffice@gmail.com</a></p>
     </div>
   </section>
 
@@ -539,6 +544,11 @@ function variants(){
   }
   var seen = {}, out = [];
   base.forEach(function(b){ var k = JSON.stringify(b); if(!seen[k]){ seen[k]=1; out.push(b); } });
+  // once prices are loaded, only offer builds that can actually be bought today
+  if(Object.keys(OFFERS).length){
+    var buyable = out.filter(function(b){ return ["cpu","gpu","mobo","ram","ssd","psu","case","cooler"].every(function(k){ return isFree(k,b[k]) || offers(k,b[k]).length; }); });
+    if(buyable.length) out = buyable;
+  }
   return {list:out, note:note};
 }
 
@@ -713,7 +723,7 @@ function renderParts(){
         }).join("")+'</div>';
         if(c && safeUrl(c.url)) body += '<div><a class="store-at" href="'+esc(safeUrl(c.url))+'" target="_blank" rel="noopener">לדף של '+esc(c.model)+' '+esc(inStore(c.store.name))+'</a></div>';
       }
-      var alts = CAT[k].filter(function(a){ if(a.id===p.id) return false; if(k==="gpu" && S.gpuPref!=="any" && a.id!=="none" && gpuBrand(a.id)!==S.gpuPref) return false; if(k==="cpu" && S.cpuPref==="amd" && isIntel(a.id)) return false; if(k==="cpu" && S.cpuPref==="intel" && !isIntel(a.id)) return false; return true; });
+      var alts = CAT[k].filter(function(a){ if(a.id===p.id) return false; if(Object.keys(OFFERS).length && !isFree(k,a.id) && !offers(k,a.id).length) return false; if(k==="gpu" && S.gpuPref!=="any" && a.id!=="none" && gpuBrand(a.id)!==S.gpuPref) return false; if(k==="cpu" && S.cpuPref==="amd" && isIntel(a.id)) return false; if(k==="cpu" && S.cpuPref==="intel" && !isIntel(a.id)) return false; return true; });
       if(alts.length) body += '<div class="small" style="margin-top:8px">או סוג אחר של '+esc(kd.name)+':</div><div class="alts">'+alts.map(function(a){
         var bad = altProblem(k,a.id), ol = isFree(k,a.id) ? null : offers(k,a.id);
         var from = isFree(k,a.id) ? " · ₪0" : (ol && ol.length ? " · מ-"+money(ol[0].price) : "");
