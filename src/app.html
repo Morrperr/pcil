@@ -66,6 +66,9 @@ a{color:var(--pen)}
 .svc-plan{border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
 .svc-plan .btn{text-decoration:none;text-align:center;align-self:stretch}
 .svc-list{margin:0;padding:0 18px 0 0;font-size:14px;color:var(--ink-2);display:flex;flex-direction:column;gap:3px}
+.term{display:inline-flex;align-items:center;gap:5px}
+.qi{display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;background:var(--pen);color:var(--paper);font-size:10px;font-weight:800;line-height:1;flex-shrink:0}
+.terms-l{font-size:13px;color:var(--muted);align-self:center}
 .cmp{margin-top:8px;border:1px solid var(--line);border-radius:6px;padding:2px 10px}
 .cmp summary{cursor:pointer;font-weight:700;color:var(--pen);min-height:40px;display:flex;align-items:center}
 .cmp-wrap{overflow-x:auto;margin:0 -4px}
@@ -112,7 +115,7 @@ a{color:var(--pen)}
 .pick-img{border:2px dashed var(--muted);border-radius:6px;padding:10px 14px;cursor:pointer;font-weight:700;min-height:44px;display:inline-flex;align-items:center}
 #offer-img:focus-visible + .small, .pick-img:focus-within{outline:3px solid var(--pen)}
 .terms{display:flex;flex-wrap:wrap;gap:6px}
-.term{border:1px solid var(--line);background:var(--wash);border-radius:999px;padding:2px 10px;font-size:13px;cursor:pointer;min-height:30px;color:var(--ink)}
+.term{border:1px dashed var(--pen);background:var(--wash);border-radius:999px;padding:2px 10px;font-size:13px;cursor:pointer;min-height:30px;color:var(--ink)}
 .term[aria-expanded="true"]{border-color:var(--pen);color:var(--pen)}
 .term-def{font-size:14px;color:var(--ink-2);background:var(--wash);border-radius:6px;padding:8px 10px}
 .trend{font-size:12px;font-weight:700}
@@ -220,7 +223,7 @@ textarea{resize:vertical;min-height:130px}
   <section id="v-build" aria-labelledby="h-build">
     <div id="shared-banner" class="note" hidden style="margin-top:16px"></div>
     <h1 id="h-build">בנה מחשב</h1>
-    <p class="lead" id="lead-build">בוחרים בשביל מה המחשב וכמה להשקיע. אנחנו מרכיבים, בודקים שהכל מתאים, ומסבירים כל חלק בעברית פשוטה.</p>
+    <p class="lead" id="lead-build">בוחרים בשביל מה המחשב וכמה להשקיע. אנחנו בוחרים את החלקים, בודקים שהכל מתאים, ומסבירים כל חלק בעברית פשוטה.</p>
 
     <div class="types" role="group" aria-label="איזה מחשב">
       <button type="button" class="type" data-type="build"><b>מחשב נייח</b><span>בונים מחלקים. הכי הרבה תמורה</span></button>
@@ -240,7 +243,7 @@ textarea{resize:vertical;min-height:130px}
       </div>
       <div id="ready-list" class="ready-list" aria-live="polite"></div>
       <div class="service-slot block"></div>
-      <p class="small" style="margin:10px 0 0">המחירים נבדקים כל בוקר בדף המוצר בחנות. המחיר הקובע הוא המחיר שם. לפני שקונים, בדקו את האחריות ואם זה יבואן רשמי. <button type="button" class="linkbtn" data-term="יבואן" style="padding:0 4px">מה ההבדל?</button></p>
+      <p class="small" style="margin:10px 0 0">המחירים נבדקים כמה פעמים ביום בדף המוצר בחנות. המחיר הקובע הוא המחיר שם. לפני שקונים, בדקו את האחריות ואם זה יבואן רשמי. <button type="button" class="linkbtn" data-term="יבואן" style="padding:0 4px">מה ההבדל?</button></p>
     </div>
 
     <div id="build-area">
@@ -381,7 +384,7 @@ textarea{resize:vertical;min-height:130px}
       <h2>מי עומד מאחורי KisPC</h2>
       <p>KisPC הוקם על ידי מור משה, כפרויקט אישי וחינמי. אין ל-KisPC קשר עסקי לאף חנות. אף חנות לא משלמת לנו, ואנחנו לא מקבלים עמלה על קנייה. סדר המחירים נקבע רק לפי המחיר.</p>
       <h2>מאיפה המחירים</h2>
-      <p>כל בוקר אנחנו בודקים את דף המוצר של כל חלק באתר החנות, ושומרים את המחיר שמופיע שם. ליד כל מחיר כתוב מתי הוא נבדק. כרגע יש מחירים מ-TMS, STO מחשבים, King Games ומחסני חשמל. חנויות שלא מאפשרות לקרוא את האתר שלהן לא מופיעות, עד שיתנו אישור.</p>
+      <p>כמה פעמים ביום אנחנו בודקים את דף המוצר של כל חלק באתר החנות, ושומרים את המחיר שמופיע שם. ליד כל מחיר כתוב מתי הוא נבדק. כרגע יש מחירים מ-TMS, STO מחשבים, King Games ומחסני חשמל. חנויות שלא מאפשרות לקרוא את האתר שלהן לא מופיעות, עד שיתנו אישור.</p>
       <p><b>המחיר הקובע הוא תמיד המחיר באתר החנות.</b> מחירים משתנים במהלך היום, ויכולות להיות טעויות. לפני שקונים, בדקו בדף המוצר את המחיר, את המלאי ואת האחריות.</p>
       <h2>ההמלצות</h2>
       <p>ההרכבות והבדיקות שלנו נבנו בזהירות: התאמת מעבד ולוח, זיכרון, ספק כוח, קירור ומארז. ועדיין, זה מידע כללי ולא ייעוץ מקצועי. האחריות על הקנייה וההרכבה היא שלכם, ושל החנות לגבי המוצרים שהיא מוכרת.</p>
@@ -445,10 +448,10 @@ var KINDS = [
   {k:"gpu", name:"כרטיס מסך", plain:"המנוע של המשחקים. פה הולך רוב הכסף.", must:false},
   {k:"mobo", name:"לוח אם", plain:"השלדה. כל החלקים מתחברים אליו.", must:true},
   {k:"ram", name:"זיכרון", plain:"שולחן העבודה. כמה דברים פתוחים בבת אחת.", must:true},
-  {k:"ssd", name:"כונן", plain:"הבגאז׳. איפה המשחקים והקבצים נשמרים.", must:true},
+  {k:"ssd", name:"כונן", plain:"המחסן. איפה המשחקים והקבצים נשמרים.", must:true},
   {k:"psu", name:"ספק כוח", plain:"מזין את כולם בחשמל. פה לא חוסכים.", must:true},
-  {k:"case", name:"מארז", plain:"הפח. שומר על הכל ומכניס אוויר.", must:true},
-  {k:"cooler", name:"קירור", plain:"הרדיאטור. חלק מהמעבדים באים עם אחד בקופסה.", must:false},
+  {k:"case", name:"מארז", plain:"הקופסה החיצונית. שומרת על הכל ומכניסה אוויר.", must:true},
+  {k:"cooler", name:"קירור", plain:"המזגן של המעבד. חלק מהמעבדים מגיעים עם קירור בקופסה.", must:false},
   {k:"monitor", name:"מסך", plain:"איפה רואים את הכל. רק אם אין לכם.", optional:true},
   {k:"kbm", name:"מקלדת ועכבר", plain:"סט אחד, עם אותיות בעברית. רק אם אין לכם.", optional:true},
   {k:"os", name:"רישיון Windows", plain:"רישיון בלבד: מפתח מוצר (KEY) רשמי. ההתקנה עצמה לא כלולה.", optional:true, own:"win"}
@@ -666,8 +669,8 @@ var GLOSSARY = [
   {t:"DOS / בלי מערכת הפעלה", re:/\b(free ?dos|dos)\b|ללא מערכת/i, d:"המחשב מגיע בלי Windows. צריך להתקין אותו, ורישיון Windows רשמי נקנה בנפרד. חלק מהחנויות מציעות התקנה בתשלום."},
   {t:"OEM / KEY", re:/\boem\b|רישיון/i, d:"רישיון OEM הוא רישיון Windows רשמי שמגיע כמפתח מוצר (KEY) ונקשר למחשב אחד. אם מחליפים מחשב, בדרך כלל צריך רישיון חדש. מפתח שנמכר זול בהרבה מהמחיר בחנויות הוא לרוב לא חוקי, ויכול להיחסם."},
   {t:"OLED", re:/oled/i, d:"סוג מסך עם צבעים חיים ושחור עמוק באמת. נראה מעולה, ובדרך כלל יקר יותר."},
-  {t:"U / H / HX", re:/\d{3,5}(u|h|hx|hs)\b|\b(u|h)\d{3}\b/i, d:"האות בסוף שם של מעבד נייד. U חסכוני בסוללה ומספיק ללימודים. H ו-HX חזקים יותר, למשחקים ולעבודה כבדה, ומחממים יותר."},
-  {t:"DDR5", re:/ddr5/i, d:"הדור החדש של זיכרון. כל הלוחות החדשים עובדים איתו, אבל הוא לא מתאים ללוחות ישנים של DDR4."},
+  {t:"U / H / HX", re:/\d{3,5}(u|h|hx|hs)\b|\b(u|h)\d{3}\b/i, d:"האות בסוף שם של מעבד נייד. U חסכוני בסוללה ומספיק ללימודים. H ו-HX חזקים יותר, למשחקים ולעבודה כבדה, ומתחממים יותר."},
+  {t:"DDR5", re:/ddr5/i, d:"הדור החדש של זיכרון. רוב הלוחות החדשים עובדים איתו, אבל הוא לא מתאים ללוחות ישנים של DDR4."},
   {t:"CL", kinds:["ram"], re:/\bcl\d+/i, d:"CL36, CL30 וכו': מהירות התגובה של הזיכרון. מספר נמוך יותר זה מהיר יותר, אבל במשחקים ההבדל קטן ולא שווה הרבה כסף."},
   {t:"6000 / 6400", kinds:["ram"], re:/\b(5200|5600|6000|6400|7200)\b/, d:"מהירות הזיכרון. 6000 נחשב לנקודה המתוקה למעבדי AMD היום."},
   {t:"EXPO / XMP", re:/\b(expo|xmp)\b/i, d:"הגדרה בלוח (ב-BIOS) שמפעילה את המהירות המלאה של הזיכרון. בלי להפעיל אותה, הזיכרון עובד לאט יותר. זה שלב במדריך ההרכבה."},
@@ -694,7 +697,7 @@ var sample = null, db = null, isOwner = false, uid = null;
 
 function load(){ try{ var s = JSON.parse(localStorage.getItem("pcil") || "null"); if(s){ ["color","type","lapUse","budget","use","level","build","v","gpuPref","cpuPref","theme","picks","mode","asm"].forEach(function(k){ if(s[k]!==undefined && s[k]!==null) S[k]=s[k]; }); S.eilat=!!s.eilat; S.abroad=!!s.abroad; S.periph=!!s.periph; S.win=!!s.win; } }catch(e){} }
 function save(){ try{ localStorage.setItem("pcil", JSON.stringify({color:S.color,type:S.type,lapUse:S.lapUse,budget:S.budget,use:S.use,level:S.level,build:S.build,eilat:S.eilat,abroad:S.abroad,v:S.v,gpuPref:S.gpuPref,cpuPref:S.cpuPref,theme:S.theme,picks:S.picks,mode:S.mode,asm:S.asm,periph:S.periph,win:S.win})); }catch(e){} }
-function preset(){ var r = variants(); S.vcount = r.list.length; S.vnote = r.note; var b = Object.assign({}, r.list[S.v % r.list.length]); return Object.assign(b, periphFor(b)); }
+function preset(){ var r = variants(); S.vpresets = r.list.length; S.vcount = Math.max(6, r.list.length); S.vnote = r.note; var b = Object.assign({}, r.list[S.v % r.list.length]); return Object.assign(b, periphFor(b)); }
 function activeKinds(){ return KINDS.filter(function(kd){ return !kd.optional || (kd.own==="win" ? S.win : S.periph); }); }
 
 function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
@@ -758,7 +761,20 @@ function chosen(k){
   var pk = S.picks[k];
   if(pk){ var hit = list.filter(function(o){ return o.key===pk; })[0]; if(hit) return hit; }
   if(S.mode==="one"){ var one=oneStore(); if(one){ var at=list.filter(function(o){ return o.store.id===one.store.id; })[0]; if(at) return at; } }
+  if(S.v>0){ var vp=variedPick(k, list); if(vp) return vp; }
   return list[0];
+}
+// "Show me another option" also rotates brands and models inside each part, at a similar price,
+// so each option looks genuinely different and not just a new CPU or graphics card.
+function brandOf(o){ return String(o.brand || (o.model||"").split(" ")[0] || "").toLowerCase(); }
+function variedPick(k, list){
+  if(!list.length) return null;
+  var base = list[0].price, pool = list.filter(function(o){ return o.price <= base*1.25 + 60; });
+  if(S.color!=="any" && COLOR_KINDS.indexOf(k)>-1){ var pc=pool.filter(function(o){ return colorOf(o)===S.color; }); if(pc.length) pool=pc; }
+  var off = 0; KINDS.forEach(function(kd,i){ if(kd.k===k) off=i; });
+  var brands=[]; pool.forEach(function(o){ var b=brandOf(o); if(brands.indexOf(b)<0) brands.push(b); });
+  if(brands.length>1){ var b=brands[(S.v+off) % brands.length]; return pool.filter(function(o){ return brandOf(o)===b; })[0]; }
+  return pool[(S.v+off) % pool.length];
 }
 function totalNow(){ var sum=0, missing=0; activeKinds().forEach(function(kd){ var p=part(kd.k); if(isFree(kd.k,p.id)) return; var c=chosen(kd.k); if(c) sum+=c.price; else missing++; }); return {sum:sum, missing:missing}; }
 function dateTxt(iso){ if(!iso) return ""; try{ return new Date(iso).toLocaleDateString("he-IL",{day:"numeric",month:"numeric"}); }catch(e){ return ""; } }
@@ -797,7 +813,7 @@ function renderUse(){
     : (S.use==="edit" ? "לעריכה שני היצרנים טובים. מעבד עם הרבה ליבות מקצר המתנה לייצוא, וכרטיס NVIDIA נותן יתרון בחלק מתוכנות העריכה." : "ללימודים ולעבודה שני היצרנים מצוינים. תבחרו לפי המחיר.");
   document.getElementById("reco").textContent = reco;
   var n = S.vcount || 1;
-  document.getElementById("variant-note").textContent = (n>1 ? "אפשרות "+((S.v % n)+1)+" מתוך "+n+", כולן באותה רמה" : "יש אפשרות אחת בהגדרות האלה") + (S.vnote ? ". "+S.vnote : "");
+  document.getElementById("variant-note").textContent = (n>1 ? "אפשרות "+((S.v % n)+1)+" מתוך "+n+(S.v % n ? ": חלקים ומותגים אחרים, באותה רמה" : ": הכי זולה ברמה הזו") : "יש אפשרות אחת בהגדרות האלה") + (S.vnote ? ". "+S.vnote : "");
   document.getElementById("again").hidden = n<2;
 }
 function tagFor(kd){
@@ -810,7 +826,7 @@ function termChips(k, text){
   var ts = termsIn(text,k); if(!ts.length) return "";
   var openT = S.term && S.term.k===k ? S.term.t : null;
   var def = openT ? GLOSSARY.filter(function(g){return g.t===openT;})[0] : null;
-  return '<div class="terms" aria-label="מה זה אומר">'+ts.map(function(g){ return '<button type="button" class="term" dir="ltr" data-tk="'+k+'" data-term="'+esc(g.t)+'" aria-expanded="'+(g.t===openT)+'">'+esc(g.t)+'?</button>'; }).join("")+'</div>'+(def?'<div class="term-def">'+esc(def.d)+'</div>':'');
+  return '<div class="terms" aria-label="מה זה אומר"><span class="terms-l">מה זה?</span>'+ts.map(function(g){ return '<button type="button" class="term" data-tk="'+k+'" data-term="'+esc(g.t)+'" aria-expanded="'+(g.t===openT)+'" aria-label="מה זה '+esc(g.t)+'"><bdi>'+esc(g.t)+'</bdi></button>'; }).join("")+'</div>'+(def?'<div class="term-def">'+esc(def.d)+'</div>':'');
 }
 function cpuUse(c){
   if(/x3d/i.test(c.id)) return c.cores>=12 ? "משחקים וגם עבודה כבדה" : "הכי טוב למשחקים";
@@ -1024,7 +1040,7 @@ function renderType(){
   document.getElementById("build-area").hidden = !isBuild;
   document.getElementById("ready-area").hidden = isBuild;
   document.getElementById("h-build").textContent = isBuild ? "בנה מחשב" : (S.type==="laptop" ? "מחשב נייד" : "מחשב מוכן");
-  document.getElementById("lead-build").textContent = isBuild ? "בוחרים בשביל מה המחשב וכמה להשקיע. אנחנו מרכיבים, בודקים שהכל מתאים, ומסבירים כל חלק בעברית פשוטה."
+  document.getElementById("lead-build").textContent = isBuild ? "בוחרים בשביל מה המחשב וכמה להשקיע. אנחנו בוחרים את החלקים, בודקים שהכל מתאים, ומסבירים כל חלק בעברית פשוטה."
     : (S.type==="laptop" ? "כל המחשבים הניידים שבדקנו, מהזול ליקר, עם הסבר פשוט מה כל אחד שווה ולמה לשים לב." : "מחשבים קטנים ומחשבים משרדיים שמגיעים מוכנים. בלי להרכיב, בלי לבחור חלקים.");
   if(isBuild){
     var hr=document.getElementById("hint-ready"), mins=(OFFERS&&Object.keys(OFFERS).filter(function(k){return k.indexOf("minipc:")===0;}).map(function(k){ var o=offers("minipc",k.slice(7)); return o.length?o[0].price:Infinity; }))||[];
