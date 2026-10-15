@@ -76,6 +76,9 @@ a{color:var(--pen)}
 .rc-good::before{content:"✓";color:var(--good)}
 .rc-warn{color:var(--ink-2)}.rc-warn::before{content:"!";color:var(--red)}
 .service{border:2px solid var(--brand);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.svc-plans{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:10px}
+.svc-plan{border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px}
+.svc-plan .btn{text-decoration:none;text-align:center;align-self:stretch}
 .svc-list{margin:0;padding:0 18px 0 0;font-size:14px;color:var(--ink-2);display:flex;flex-direction:column;gap:3px}
 .ctag{font-size:11px;font-weight:700;border:1px solid var(--muted);border-radius:3px;padding:0 5px;margin-inline-start:6px;background:#fff;color:#222}
 .color-miss{font-size:13px;color:var(--ink-2);margin:0}
@@ -244,6 +247,7 @@ textarea{resize:vertical;min-height:130px}
         <div class="budgets" role="group" aria-labelledby="bud-label" id="budgets"></div>
       </div>
       <div id="ready-list" class="ready-list" aria-live="polite"></div>
+      <div class="service-slot block"></div>
       <p class="small" style="margin:10px 0 0">המחירים נבדקים כל בוקר בדף המוצר בחנות. המחיר הקובע הוא המחיר שם. לפני שקונים, בדקו את האחריות ואם זה יבואן רשמי. <button type="button" class="linkbtn" data-term="יבואן" style="padding:0 4px">מה ההבדל?</button></p>
     </div>
 
@@ -319,16 +323,17 @@ textarea{resize:vertical;min-height:130px}
         </div>
         <span class="small" id="alert-msg" aria-live="polite"></span>
       </div>
-      <div class="hint-ready">אין לכם כוח להזמין ולהרכיב? <b>אנחנו נבנה את המחשב בשבילכם</b>, מ-<span id="svc-from"></span>. <button type="button" class="linkbtn" id="svc-go" style="padding:0 4px">איך זה עובד</button></div>
+      <div class="hint-ready">מרגישים שזה יותר מדי? <b>נבנה לכם מפרט אישי</b> מ-₪<span id="svc-from">49</span>. <button type="button" class="linkbtn" id="svc-go" style="padding:0 4px">לפרטים</button></div>
       <p class="small" style="margin:0">לפני שקונים: בדקו בדף המוצר כמה שנות אחריות ואם זה יבואן רשמי. <button type="button" class="linkbtn" data-term="יבואן" style="padding:0 4px">מה ההבדל?</button></p>
     </div>
 
     <div class="block">
       <h2>מי מרכיב?</h2>
-      <p class="small" style="margin:4px 0 10px">את החלקים צריך לחבר ביחד. יש חמש דרכים, תבחרו אחת:</p>
+      <p class="small" style="margin:4px 0 10px">את החלקים צריך לחבר ביחד. יש ארבע דרכים, תבחרו אחת:</p>
       <div class="assembly" id="assembly"></div>
       <div id="guide" class="block"></div>
     </div>
+    <div class="service-slot block" id="svc-build"></div>
     </div>
   </section>
 
@@ -387,8 +392,8 @@ textarea{resize:vertical;min-height:130px}
       <p><b>המחיר הקובע הוא תמיד המחיר באתר החנות.</b> מחירים משתנים במהלך היום, ויכולות להיות טעויות. לפני שקונים, בדקו בדף המוצר את המחיר, את המלאי ואת האחריות.</p>
       <h2>ההמלצות</h2>
       <p>ההרכבות והבדיקות שלנו נבנו בזהירות: התאמת מעבד ולוח, זיכרון, ספק כוח, קירור ומארז. ועדיין, זה מידע כללי ולא ייעוץ מקצועי. האחריות על הקנייה וההרכבה היא שלכם, ושל החנות לגבי המוצרים שהיא מוכרת.</p>
-      <h2>שירות הרכבה בתשלום</h2>
-      <p>מי שלא רוצה להתעסק יכול לבקש שנבנה בשבילו את המחשב, בתשלום על ההרכבה בלבד. השירות לא משפיע על המחירים או על הסדר באתר: החלקים נקנים ישירות מהחנויות, במחירים שמוצגים כאן, ואנחנו לא מקבלים מהן כלום.</p>
+      <h2>מפרט אישי בתשלום</h2>
+      <p>מי שלא רוצה לבחור לבד יכול לבקש שנבנה לו מפרט אישי, בתשלום קטן. אנחנו לא מרכיבים מחשבים: ההרכבה נעשית בחנות או אצל טכנאי. השירות לא משפיע על המחירים או על הסדר באתר. החלקים נקנים ישירות מהחנויות, במחירים שמוצגים כאן, ואנחנו לא מקבלים מהן כלום.</p>
       <h2>פרטיות</h2>
       <p>אין הרשמה ואין חשבונות. מה שבוחרים באתר נשמר רק בדפדפן שלכם. קישור שיתוף מכיל את המחשב שבחרתם, ולא שום פרט אישי. אנחנו לא משתמשים בעוגיות מעקב ולא אוספים נתוני גלישה. האתר מאוחסן ב-GitHub Pages והגופנים נטענים מ-Google Fonts, ולכן השירותים האלה עשויים לראות את כתובת ה-IP שלכם, כמו בכל אתר.</p>
       <h2>נגישות</h2>
@@ -629,11 +634,9 @@ var STORES = [
   {id:"tms", name:"TMS"}, {id:"sto", name:"STO מחשבים"}, {id:"kinggames", name:"King Games"}, {id:"pconline", name:"PC-Online"}, {id:"payngo", name:"מחסני חשמל"}, {id:"plonter", name:"פלאנטר"}, {id:"amazon", name:"אמזון", abroad:true}
 ];
 var STORE_BY = {}; STORES.forEach(function(s){ STORE_BY[s.id]=s; });
-// Our own build service. Prices are easy to change here.
-var SERVICE = {mail:"kispcoffice@gmail.com", small:249, big:349, bigFrom:5000, delivery:"משלוח או איסוף לפי אזור"};
-function servicePrice(total){ return total>SERVICE.bigFrom ? SERVICE.big : SERVICE.small; }
+// Personal spec service (we choose the parts for you; we don't assemble). Prices are easy to change here.
+var SERVICE = {mail:"kispcoffice@gmail.com", basic:49, plus:99};
 var ASSEMBLY = [
-  {id:"kispc", name:"KisPC בונים בשבילכם", text:"אין לכם כוח להתעסק? אנחנו מזמינים את החלקים (אתם משלמים ישירות לחנויות), מרכיבים, מתקינים Windows ודרייברים, ובודקים שהכל עובד לפני שזה מגיע אליכם."},
   {id:"self", name:"אני מרכיב לבד", text:"עולה ₪0. לוקח בערך שעתיים-שלוש בפעם הראשונה, וצריך רק מברג פיליפס. יש מדריך צעד אחר צעד כאן למטה."},
   {id:"friend", name:"חבר או קרוב שמבין במחשבים", text:"עולה ₪0. שלחו לו את הקישור למחשב (כפתור \"לשתף בקישור\"), והוא יראה בדיוק מה קניתם. המדריך כאן למטה יעזור גם לו."},
   {id:"store", name:"החנות מרכיבה", text:"החנות מרכיבה, מתקינה ובודקת שהכל עובד. ב-TMS יש כמה מסלולים לפי מהירות: עד 7 ימי עסקים (Silver, חינם ברכישת מחשב חדש), עד 3 ימים (Gold) ועד יומיים (Express). את המחיר המדויק כדאי לברר מול החנות. בדרך כלל צריך לקנות את כל החלקים באותה חנות, אז כדאי לבחור למעלה \"הכל מחנות אחת\"."},
@@ -850,8 +853,7 @@ function renderTotal(){
   if(t.sum) note += " לא כולל הרכבה ו-Windows.";
   document.getElementById("total-note").textContent = note;
   document.getElementById("pb-total").textContent = t.sum ? money(t.sum) : "—";
-  document.getElementById("svc-from").textContent = money(SERVICE.small);
-  if(S.asm==="kispc") renderGuide();
+  renderService();
   var groups={}, order=[];
   activeKinds().forEach(function(kd){ var p=part(kd.k); if(isFree(kd.k,p.id)) return; var c=chosen(kd.k); if(!c) return; var g=groups[c.store.id]; if(!g){ g=groups[c.store.id]={store:c.store, items:[], sum:0}; order.push(g); } g.items.push({kd:kd, c:c}); g.sum+=c.price; });
   var bs = document.getElementById("by-store");
@@ -869,21 +871,25 @@ function renderAssembly(){
   }).join("");
   renderGuide();
 }
-function serviceHtml(){
-  var t = totalNow().sum, fee = servicePrice(t);
-  var body = buildText()+"\n\nאני רוצה שתבנו לי את המחשב הזה.\nשם:\nטלפון:\nעיר:\nהערות (צבע, תאריך, מסך/מקלדת וכו'):\n";
-  var href = "mailto:"+SERVICE.mail+"?subject="+encodeURIComponent("בקשה להרכבת מחשב, "+(t?money(t):""))+"&body="+encodeURIComponent(body);
-  return '<div class="service"><h2>KisPC בונים בשבילכם</h2>'+
-    '<div class="total" style="margin-top:6px"><span>מחיר ההרכבה למחשב הזה</span><b>'+money(fee)+'</b></div>'+
-    '<p class="small" style="margin:0">'+money(SERVICE.small)+' למחשב עד '+money(SERVICE.bigFrom)+', '+money(SERVICE.big)+' מעל. החלקים עצמם לא כלולים: אתם קונים אותם ישירות מהחנויות, במחירים שכאן.</p>'+
-    '<ul class="svc-list"><li>בוחרים איתכם את המפרט הסופי, ואם צריך מעדכנים לפי המחירים של אותו יום</li><li>מזמינים את החלקים על שמכם, כך שהאחריות של היצרן נשארת שלכם</li><li>מרכיבים, מעדכנים BIOS ומפעילים את מהירות הזיכרון המלאה</li><li>מתקינים Windows (הרישיון שלכם) ודרייברים</li><li>מריצים בדיקת עומס, כדי לוודא שהכל יציב ולא מתחמם</li><li>30 יום תמיכה על ההרכבה. '+esc(SERVICE.delivery)+'</li></ul>'+
-    '<a class="btn" href="'+esc(href)+'" style="display:inline-flex;align-items:center;text-decoration:none">לבקש הרכבה במייל</a>'+
-    '<p class="small" style="margin:8px 0 0">המייל נפתח עם המחשב שבחרתם כבר בפנים. משלימים שם וטלפון ושולחים, ונחזור אליכם.</p></div>';
+function serviceMail(kind){
+  var body;
+  if(S.type==="build" && totalNow().sum) body = "אני רוצה מפרט אישי. זה מה שבניתי באתר בינתיים:\n\n"+buildText()+"\n\n";
+  else body = "אני רוצה מפרט אישי.\n\n";
+  body += "בשביל מה המחשב:\nתקציב:\nנייח או נייד:\nהעדפות (צבע, גודל, משחקים מסוימים):\nשם:\nטלפון (לא חובה):\n";
+  return "mailto:"+SERVICE.mail+"?subject="+encodeURIComponent("בקשה למפרט אישי ("+(kind==="plus"?"עם ליווי":"בסיסי")+")")+"&body="+encodeURIComponent(body);
 }
+function serviceBox(){
+  return '<div class="service"><h2>רוצים שמישהו יבחר בשבילכם?</h2>'+
+    '<p class="small" style="margin:0">ספרו לנו בשביל מה המחשב ומה התקציב, ונבנה לכם מפרט אישי מהחנויות שבאתר, במחירים של אותו יום. ההרכבה עצמה נעשית בחנות או אצל טכנאי, כמו שמוסבר כאן.</p>'+
+    '<div class="svc-plans">'+
+      '<div class="svc-plan"><div class="total"><span>מפרט אישי</span><b>'+money(SERVICE.basic)+'</b></div><ul class="svc-list"><li>מפרט מותאם לכם, עם הסבר קצר למה כל חלק</li><li>רשימת קנייה עם קישורים, מהחנויות הכי משתלמות</li><li>תשובה במייל תוך יום עסקים</li></ul><a class="btn" href="'+esc(serviceMail("basic"))+'">לבקש מפרט</a></div>'+
+      '<div class="svc-plan"><div class="total"><span>מפרט עם ליווי</span><b>'+money(SERVICE.plus)+'</b></div><ul class="svc-list"><li>כל מה שבמפרט האישי</li><li>מענה לשאלות עד הקנייה, במייל או בוואטסאפ</li><li>בדיקה של הצעת מחיר מחנות או מטכנאי לפני שמשלמים</li><li>אם המחיר יורד בשבועיים שאחרי, נגיד לכם</li></ul><a class="btn dark" href="'+esc(serviceMail("plus"))+'">לבקש מפרט עם ליווי</a></div>'+
+    '</div><p class="small" style="margin:0">משלמים רק אחרי שמקבלים את המפרט. השירות לא משפיע על המחירים או על הסדר באתר.</p></div>';
+}
+function renderService(){ document.querySelectorAll(".service-slot").forEach(function(el){ el.innerHTML = serviceBox(); }); }
 function yt(q){ return "https://www.youtube.com/results?search_query="+encodeURIComponent(q); }
 function renderGuide(){
   var el = document.getElementById("guide");
-  if(S.asm==="kispc"){ el.innerHTML = serviceHtml(); return; }
   if(S.asm!=="self" && S.asm!=="friend"){ el.innerHTML=""; return; }
   var cpu=part("cpu"), gpu=part("gpu"), cool=part("cooler"), intel=isIntel(cpu.id), cn=(chosen("cooler")||{}).model||cool.name;
   var steps = [
@@ -979,6 +985,7 @@ function renderReady(){
   }).join("");
 }
 function renderType(){
+  renderService();
   document.querySelectorAll("[data-type].type").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.type===S.type)); });
   var isBuild = S.type==="build";
   document.getElementById("build-area").hidden = !isBuild;
@@ -1027,7 +1034,7 @@ document.addEventListener("click", function(e){
   else if(t.dataset.pick){ S.picks[t.dataset.pick]=t.dataset.key; save(); renderParts(); renderTotal(); }
   else if(t.dataset.swap){ S.build[t.dataset.swap]=t.dataset.id; delete S.picks[t.dataset.swap]; S.open=null; if(t.dataset.swap==="gpu"){ S.build.monitor = periphFor(S.build).monitor; } save(); renderParts(); renderChecks(); renderTotal(); renderGuide(); }
   else if(t.dataset.tab){ showTab(t.dataset.tab); }
-  else if(t.id==="svc-go"){ S.asm="kispc"; save(); renderAssembly(); var g=document.getElementById("guide"); if(g) g.scrollIntoView({behavior:"smooth", block:"start"}); }
+  else if(t.id==="svc-go"){ var g=document.getElementById("svc-build"); if(g) g.scrollIntoView({behavior:"smooth", block:"start"}); }
   else if(t.id==="pb-go"){ var sm=document.getElementById("summary"); if(sm) sm.scrollIntoView({behavior:"smooth", block:"start"}); }
 });
 document.getElementById("eilat").addEventListener("change", function(e){ S.eilat=e.target.checked; save(); renderParts(); renderTotal(); });
