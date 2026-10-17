@@ -114,6 +114,9 @@ a{color:var(--pen)}
 .again-btn{background:var(--paper);border:2px solid var(--brand);color:var(--ink);border-radius:6px;padding:10px 16px;min-height:46px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px}
 .again-btn svg{width:18px;height:18px;color:var(--brand)}
 .variant-note{font-size:14px;color:var(--ink-2)}
+.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.quick .chip{min-height:40px;font-size:15px}
+.btn.wa{text-decoration:none;background:var(--good);color:var(--paper);display:inline-flex;align-items:center}
 .opt-list{margin-top:10px;border:2px solid var(--line);border-radius:8px;background:var(--paper)}
 .opt-list>summary{cursor:pointer;padding:10px 12px;font-weight:800;min-height:44px;display:flex;align-items:center;color:var(--pen)}
 .opt-why{margin:0 12px 10px;font-size:14px;color:var(--ink-2);background:var(--marker-soft);padding:8px 10px;border-radius:4px}
@@ -286,7 +289,13 @@ textarea{resize:vertical;min-height:130px}
     </div>
 
     <div class="block">
-      <div class="label" id="lvl-label">כמה להשקיע?</div>
+      <div class="label" id="bb-label">כמה כסף יש לכם?</div>
+      <div class="budgets" role="group" aria-labelledby="bb-label" id="bbudgets"></div>
+      <p class="small" id="bb-note" style="margin:6px 0 0">בחרו סכום, ונמצא לכם את המחשב הכי טוב שנכנס בו.</p>
+    </div>
+
+    <div class="block">
+      <div class="label" id="lvl-label">או בחרו רמה:</div>
       <div class="levels" role="group" aria-labelledby="lvl-label" id="levels"></div>
       <p class="small" style="margin:6px 0 0">לא בטוחים? "מאוזן" מתאים לרוב האנשים. המחירים בערך, לפי היום.</p>
       <div class="hint-ready" id="hint-ready" hidden>צריכים רק לימודים, אינטרנט, זום ואופיס? מחשב מיני מוכן מתחיל ב-<b id="hint-ready-price"></b>, כולל הכל. <button type="button" class="linkbtn" data-type="ready" style="padding:0 4px">להראות לי</button></div>
@@ -319,6 +328,7 @@ textarea{resize:vertical;min-height:130px}
       <span class="variant-note" id="variant-note"></span>
       <button type="button" class="again-btn" id="again"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"></path><path d="M21 3v5h-5"></path></svg>תראו לי עוד אפשרות</button>
     </div>
+    <div class="quick" id="quick" hidden></div>
     <details class="opt-list" id="opt-list" hidden><summary id="opt-sum">כל האפשרויות ברמה הזו</summary>
       <p class="opt-why"><b>למה כדאי לקנות הכל מחנות אחת?</b> אחריות אחת על כל המחשב: אם משהו לא עובד, יש כתובת אחת, ולא צריך לברר איזה חלק ואיזו חנות אחראים. הזמנה אחת, משלוח אחד, והחזרה פשוטה. ובדרך כלל חנות מסכימה להרכיב רק כשכל החלקים נקנו אצלה.</p>
       <div class="opt-filter seg" role="group" aria-label="סינון אפשרויות"><button type="button" data-optf="all">כל האפשרויות</button><button type="button" data-optf="one">רק מחנות אחת</button></div>
@@ -344,6 +354,7 @@ textarea{resize:vertical;min-height:130px}
       <div class="row">
         <button class="btn" id="share" type="button">לשתף בקישור</button>
         <button class="btn dark" id="copy" type="button">להעתיק כטקסט</button>
+        <a class="btn wa" id="wa" href="https://wa.me/" target="_blank" rel="noopener">לשלוח בוואטסאפ</a>
       </div>
       <div class="small" id="copy-msg" aria-live="polite" style="word-break:break-all"></div>
       <div class="alert-box" id="alert-box" hidden>
@@ -747,7 +758,7 @@ var GLOSSARY = [
   {t:"Hz", re:/\d{2,3} ?hz/i, d:"כמה פעמים בשנייה המסך מתרענן. 144 ומעלה נותן משחקים חלקים. מסך משרדי רגיל הוא 60 או 75."},
   {t:"יבואן", re:/^$/, d:"יבואן רשמי: המוצר יובא דרך הנציגות של החברה בישראל, והאחריות היא דרכם. יבוא מקביל: מוצר מקורי שהובא בדרך אחרת. לפעמים זול יותר, אבל האחריות היא רק של החנות. בכל מקרה, בדקו בדף המוצר כמה שנות אחריות יש ומי נותן אותה."}
 ];
-var S = { color:"any", type:"build", lapUse:"work", budget:"all", use:"game", level:"mid", build:null, open:null, eilat:false, abroad:false, bi:0, vary:0, ostore:"", optf:"all", gpuPref:"any", cpuPref:"any", theme:"light", vnote:"", picks:{}, mode:"cheap", asm:"self", periph:false, term:null };
+var S = { bbud:0, color:"any", type:"build", lapUse:"work", budget:"all", use:"game", level:"mid", build:null, open:null, eilat:false, abroad:false, bi:0, vary:0, ostore:"", optf:"all", gpuPref:"any", cpuPref:"any", theme:"light", vnote:"", picks:{}, mode:"cheap", asm:"self", periph:false, term:null };
 var OFFERS = {}; // "kind:cls" -> [offer docs]
 var HISTORY = {}; // offer key -> points
 var sample = null, db = null, isOwner = false, uid = null;
@@ -916,6 +927,7 @@ function termsIn(text,k){ return GLOSSARY.filter(function(g){ return (!g.kinds |
 /* ---------- Render: build ---------- */
 function renderUse(){
   document.querySelectorAll("[data-use]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.use===S.use)); });
+  renderBudgets();
   document.getElementById("levels").innerHTML = LEVELS.map(function(l){
     return '<button type="button" class="level" data-level="'+l.id+'" aria-pressed="'+(l.id===S.level)+'"><b>'+esc(l.name)+'</b><span>'+esc(l.hint)+'</span>'+(function(){ var lp=levelPrice(l.id); return lp ? '<em>בערך '+money(roundK(lp))+'</em>' : ''; })()+'</button>';
   }).join("");
@@ -937,9 +949,24 @@ function renderUse(){
   document.getElementById("again").hidden = n<2;
   renderOptList(ol, pos);
 }
+var BBUD = [3000,4000,5000,6500,8000,10000,15000,25000];
+function renderBudgets(){
+  document.getElementById("bbudgets").innerHTML = BBUD.map(function(n){ return '<button type="button" class="chip" data-bbud="'+n+'" aria-pressed="'+(S.bbud===n)+'">עד '+money(n)+'</button>'; }).join("");
+}
+// Budget first: the strongest level that has an option within the budget, and its cheapest option there.
+function pickBudget(n){
+  var keepL = S.level, best = null, cheapest = null;
+  var capped = false;
+  LEVELS.forEach(function(l, li){ if(S.use==="study" && li>3){ capped = true; return; } S.level = l.id; var ol = allOptions(); if(ol.length && (!cheapest || ol[0].sum < cheapest.o.sum)) cheapest = {level:l.id, o:ol[0]}; var fit = ol.filter(function(o){ return o.sum <= n; }); if(fit.length) best = {level:l.id, o:fit[0]}; });
+  var pick = best || cheapest; S.level = pick ? pick.level : keepL; setOpt(pick ? pick.o : null); S.bbud = n;
+  var lv = LEVELS.filter(function(l){ return l.id===S.level; })[0];
+  document.getElementById("bb-note").textContent = !pick ? "עוד אין מחירים. נסו שוב בעוד רגע." : (best ? "בחרנו לכם מחשב ברמת \""+lv.name+"\" ב-"+money(pick.o.sum)+(n-pick.o.sum>=200 ? ". נשארים לכם "+money(n-pick.o.sum)+(capped && S.level==="strong" ? ". ללימודים ולעבודה זה מספיק לגמרי, אין צורך להוציא יותר." : ", ואפשר לשדרג ברשימת האפשרויות למטה.") : ".") : "אין מחשב שלם עד "+money(n)+". הכי זול שמצאנו עולה "+money(pick.o.sum)+". בתקציב כזה כדאי לשקול גם קונסולה או מחשב נייד.");
+}
 function renderOptList(ol, pos){
-  var box = document.getElementById("opt-list"); box.hidden = ol.length<2;
+  var box = document.getElementById("opt-list"), qk = document.getElementById("quick"); box.hidden = ol.length<2; qk.hidden = box.hidden;
   if(box.hidden) return;
+  var qOne = -1; for(var qi=0; qi<ol.length; qi++){ if(ol[qi].stores.length===1){ qOne=qi; break; } }
+  qk.innerHTML = '<button type="button" class="chip" data-opt="0" aria-pressed="'+(pos===0)+'">הכי זול: '+money(ol[0].sum)+'</button>'+(qOne>0 ? '<button type="button" class="chip" data-opt="'+qOne+'" aria-pressed="'+(pos===qOne)+'">הכל מחנות אחת: '+money(ol[qOne].sum)+'</button>' : '');
   var nOne = ol.filter(function(o){ return o.stores.length===1; }).length, nStores = {};
   ol.forEach(function(o){ o.stores.forEach(function(id){ nStores[id]=1; }); });
   document.getElementById("opt-sum").textContent = "כל "+ol.length+" האפשרויות ברמה הזו, מהזולה ליקרה ("+Object.keys(nStores).length+" חנויות, "+nOne+" מחנות אחת)";
@@ -1039,6 +1066,7 @@ function renderTotal(){
   if(t.sum) note += S.win ? " כולל רישיון Windows (בלי התקנה). לא כולל הרכבה." : " לא כולל הרכבה ו-Windows.";
   document.getElementById("total-note").textContent = note;
   document.getElementById("pb-total").textContent = t.sum ? money(t.sum) : "—";
+  try{ document.getElementById("wa").href = "https://wa.me/?text="+encodeURIComponent(buildText()+(db ? "" : "\n\nלראות ולשנות: "+location.origin+location.pathname+shareHash())); }catch(e){}
   renderService();
   var groups={}, order=[];
   activeKinds().forEach(function(kd){ var p=part(kd.k); if(isFree(kd.k,p.id)) return; var c=chosen(kd.k); if(!c) return; var g=groups[c.store.id]; if(!g){ g=groups[c.store.id]={store:c.store, items:[], sum:0}; order.push(g); } g.items.push({kd:kd, c:c}); g.sum+=c.price; });
@@ -1204,11 +1232,12 @@ document.addEventListener("click", function(e){
   else if(t.dataset.color){ S.color=t.dataset.color; S.picks={}; save(); renderBuild(); }
   else if(t.dataset.lapuse){ S.lapUse=t.dataset.lapuse; S.budget="all"; save(); renderReady(); }
   else if(t.dataset.budget){ S.budget=t.dataset.budget; save(); renderReady(); }
-  else if(t.dataset.use){ S.use=t.dataset.use; firstOpt(); save(); renderBuild(); }
-  else if(t.dataset.level){ S.level=t.dataset.level; firstOpt(); save(); renderBuild(); }
+  else if(t.dataset.use){ S.use=t.dataset.use; if(S.bbud && Object.keys(OFFERS).length) pickBudget(S.bbud); else firstOpt(); save(); renderBuild(); }
+  else if(t.dataset.level){ S.level=t.dataset.level; S.bbud=0; document.getElementById("bb-note").textContent="בחרו סכום, ונמצא לכם את המחשב הכי טוב שנכנס בו."; firstOpt(); save(); renderBuild(); }
   else if(t.dataset.gpupref){ S.gpuPref=t.dataset.gpupref; firstOpt(); save(); renderBuild(); }
   else if(t.dataset.cpupref){ S.cpuPref=t.dataset.cpupref; firstOpt(); save(); renderBuild(); }
   else if(t.dataset.mode){ S.mode=t.dataset.mode; var ml=allOptions(), mb=S.bi; setOpt(ml.filter(function(o){ return o.bi===mb; })[0] || ml[0] || null); save(); renderBuild(); }
+  else if(t.dataset.bbud){ pickBudget(Number(t.dataset.bbud)); save(); renderBuild(); }
   else if(t.dataset.optf){ S.optf=t.dataset.optf; renderOptList(allOptions(), optPos(allOptions())); }
   else if(t.dataset.opt){ var lo=allOptions()[Number(t.dataset.opt)]; if(lo){ setOpt(lo); save(); renderBuild(); try{ document.getElementById("parts").scrollIntoView({behavior:"smooth", block:"start"}); }catch(e){} } }
   else if(t.dataset.asm){ S.asm=t.dataset.asm; save(); renderAssembly(); }
