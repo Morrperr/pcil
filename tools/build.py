@@ -15,7 +15,8 @@ head='''<!doctype html>
 <meta name="description" content="PCli: בונים מחשב בקלות, משווים מחירים בין חנויות בישראל, ומבינים כל חלק בעברית פשוטה. חינם, בלי פרסומות ובלי עמלות.">
 <meta name="theme-color" content="#FF6D00">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" href="icons/icon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.ico" sizes="48x48">
+<link rel="icon" href="icons/favicon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="icons/icon-180.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="PCli">
