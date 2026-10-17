@@ -99,6 +99,19 @@ a{color:var(--pen)}
 .again-btn{background:var(--paper);border:2px solid var(--brand);color:var(--ink);border-radius:6px;padding:10px 16px;min-height:46px;font-weight:800;cursor:pointer;display:flex;align-items:center;gap:8px}
 .again-btn svg{width:18px;height:18px;color:var(--brand)}
 .variant-note{font-size:14px;color:var(--ink-2)}
+.opt-list{margin-top:10px;border:2px solid var(--line);border-radius:8px;background:var(--paper)}
+.opt-list>summary{cursor:pointer;padding:10px 12px;font-weight:800;min-height:44px;display:flex;align-items:center;color:var(--pen)}
+.opt-why{margin:0 12px 10px;font-size:14px;color:var(--ink-2);background:var(--marker-soft);padding:8px 10px;border-radius:4px}
+.opt-filter{margin:0 12px 10px}
+.opt-items{display:flex;flex-direction:column;max-height:460px;overflow-y:auto}
+.opt{display:flex;justify-content:space-between;gap:10px;align-items:center;padding:9px 12px;border:0;border-top:1px solid var(--line);background:none;text-align:right;cursor:pointer;color:var(--ink);font:inherit;width:100%;min-height:52px;flex-shrink:0}
+.opt:hover{background:var(--marker-soft)}
+.opt[aria-pressed="true"]{background:var(--marker-soft);box-shadow:inset -4px 0 0 var(--brand)}
+.opt .o-main{min-width:0}
+.opt .o-name{display:block;font-weight:700;font-size:15px}
+.opt .o-sub{display:block;font-size:13px;color:var(--ink-2)}
+.opt>b{font-variant-numeric:tabular-nums;flex-shrink:0;font-size:16px}
+.one-tag{display:inline-block;font-size:12px;font-weight:800;padding:1px 7px;border-radius:3px;background:var(--good);color:var(--paper);margin-inline-end:6px}
 .models{display:flex;flex-direction:column;gap:0;border:1px solid var(--line);border-radius:6px;margin-top:4px}
 .model{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 10px;border-bottom:1px solid var(--line);background:var(--paper);text-align:right;cursor:pointer;width:100%;border-left:0;border-right:0;border-top:0;min-height:52px}
 .model:last-child{border-bottom:0}
@@ -288,6 +301,11 @@ textarea{resize:vertical;min-height:130px}
       <span class="variant-note" id="variant-note"></span>
       <button type="button" class="again-btn" id="again"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"></path><path d="M21 3v5h-5"></path></svg>תראו לי עוד אפשרות</button>
     </div>
+    <details class="opt-list" id="opt-list" hidden><summary id="opt-sum">כל האפשרויות ברמה הזו</summary>
+      <p class="opt-why"><b>למה כדאי לקנות הכל מחנות אחת?</b> אחריות אחת על כל המחשב: אם משהו לא עובד, יש כתובת אחת, ולא צריך לברר איזה חלק ואיזו חנות אחראים. הזמנה אחת, משלוח אחד, והחזרה פשוטה. ובדרך כלל חנות מסכימה להרכיב רק כשכל החלקים נקנו אצלה.</p>
+      <div class="opt-filter seg" role="group" aria-label="סינון אפשרויות"><button type="button" data-optf="all">כל האפשרויות</button><button type="button" data-optf="one">רק מחנות אחת</button></div>
+      <div class="opt-items" id="opt-items"></div>
+    </details>
 
     <div class="parts" id="parts"></div>
     <div class="checks" id="checks" aria-live="polite"></div>
@@ -299,6 +317,7 @@ textarea{resize:vertical;min-height:130px}
           <button type="button" data-mode="cheap">הכי זול, מכמה חנויות</button><button type="button" data-mode="one">הכל מחנות אחת</button>
         </div>
       </div>
+      <p class="small" style="margin:-4px 0 0">הכל מחנות אחת זה בדרך כלל קצת יותר יקר, אבל יותר פשוט: אחריות ושירות במקום אחד, הזמנה אחת ומשלוח אחד.</p>
       <div class="total"><span id="total-label">סה"כ</span><b id="total">—</b></div>
       <div id="total-note" class="note"></div>
       <div id="by-store" hidden></div>
@@ -611,8 +630,28 @@ var INTEL_FOR = {
 };
 function isIntel(id){ return BY["cpu:"+id].socket!=="AM5"; }
 function gpuBrand(id){ return id.indexOf("rx")===0 ? "amd" : (id.indexOf("rtx")===0 ? "nvidia" : "none"); }
+// More options at the same level: swap in parts of the same class (a rival graphics card, a rival CPU
+// with its matching board, a bigger or smaller board). Every result is checked for compatibility.
+var GPU_SIB = {rx9060xt:"rtx5060ti", rtx5060ti:"rx9060xt", rtx5070:"rx9070", rx9070:"rtx5070", rx9070xt:"rtx5070ti", rtx5070ti:"rx9070xt"};
+var CPU_ALT = {
+  "r5-5500":[["i5-14400f","h610m-d4"]], "i5-14400f":[["r5-5500","a520m"],["r5-7600x","b650m"]],
+  "r5-7600x":[["r5-9600x",null],["i5-14400f","b760m-d5"]], "r5-9600x":[["r5-7600x",null],["u5-245k","b860m"]],
+  "u5-245k":[["r5-9600x","b650m"]], "r9-9900x":[["u7-265k","b860m"]], "u7-265k":[["r9-9900x","b650"]],
+  "i3-14100":[["r5-5600gt","a520m"]], "r5-5600gt":[["i3-14100","h610m-d4"]],
+  "r5-8500g":[["i5-14400","b760m-d5"]], "i5-14400":[["r5-8500g","b650m"]]
+};
+var MOBO_ALT = {b650m:"b650", b650:"b650m"};
+function fixCase(b){ if(BY["mobo:"+b.mobo].form==="ATX" && BY["case:"+b["case"]].fits.indexOf("ATX")<0) b["case"]="case-atx"; return b; }
+function expand(list){
+  var out = list.slice();
+  function add(n){ fixCase(n); if(problemsFor(n).every(function(p){ return p.ok; })) out.push(n); }
+  list.forEach(function(b){ if(GPU_SIB[b.gpu]) add(Object.assign({}, b, {gpu:GPU_SIB[b.gpu]})); });
+  out.slice().forEach(function(b){ (CPU_ALT[b.cpu]||[]).forEach(function(a){ var n=Object.assign({}, b, {cpu:a[0]}); if(a[1]) n.mobo=a[1]; add(n); }); });
+  out.slice().forEach(function(b){ if(MOBO_ALT[b.mobo]) add(Object.assign({}, b, {mobo:MOBO_ALT[b.mobo]})); });
+  return out;
+}
 function variants(){
-  var base = PRESETS[S.use][S.level].map(function(b){ return Object.assign({}, b); });
+  var base = expand(PRESETS[S.use][S.level].map(function(b){ return Object.assign({}, b); }));
   if(S.cpuPref==="amd"){ var a = base.filter(function(b){ return !isIntel(b.cpu); }); base = a.length ? a : base; }
   if(S.cpuPref==="intel"){
     var ip = INTEL_FOR[S.use][S.level];
@@ -690,14 +729,14 @@ var GLOSSARY = [
   {t:"Hz", re:/\d{2,3} ?hz/i, d:"כמה פעמים בשנייה המסך מתרענן. 144 ומעלה נותן משחקים חלקים. מסך משרדי רגיל הוא 60 או 75."},
   {t:"יבואן", re:/^$/, d:"יבואן רשמי: המוצר יובא דרך הנציגות של החברה בישראל, והאחריות היא דרכם. יבוא מקביל: מוצר מקורי שהובא בדרך אחרת. לפעמים זול יותר, אבל האחריות היא רק של החנות. בכל מקרה, בדקו בדף המוצר כמה שנות אחריות יש ומי נותן אותה."}
 ];
-var S = { color:"any", type:"build", lapUse:"work", budget:"all", use:"game", level:"mid", build:null, open:null, eilat:false, abroad:false, v:0, gpuPref:"any", cpuPref:"any", theme:"light", vnote:"", picks:{}, mode:"cheap", asm:"self", periph:false, term:null };
+var S = { color:"any", type:"build", lapUse:"work", budget:"all", use:"game", level:"mid", build:null, open:null, eilat:false, abroad:false, bi:0, vary:0, ostore:"", optf:"all", gpuPref:"any", cpuPref:"any", theme:"light", vnote:"", picks:{}, mode:"cheap", asm:"self", periph:false, term:null };
 var OFFERS = {}; // "kind:cls" -> [offer docs]
 var HISTORY = {}; // offer key -> points
 var sample = null, db = null, isOwner = false, uid = null;
 
-function load(){ try{ var s = JSON.parse(localStorage.getItem("pcil") || "null"); if(s){ ["color","type","lapUse","budget","use","level","build","v","gpuPref","cpuPref","theme","picks","mode","asm"].forEach(function(k){ if(s[k]!==undefined && s[k]!==null) S[k]=s[k]; }); S.eilat=!!s.eilat; S.abroad=!!s.abroad; S.periph=!!s.periph; S.win=!!s.win; } }catch(e){} }
-function save(){ try{ localStorage.setItem("pcil", JSON.stringify({color:S.color,type:S.type,lapUse:S.lapUse,budget:S.budget,use:S.use,level:S.level,build:S.build,eilat:S.eilat,abroad:S.abroad,v:S.v,gpuPref:S.gpuPref,cpuPref:S.cpuPref,theme:S.theme,picks:S.picks,mode:S.mode,asm:S.asm,periph:S.periph,win:S.win})); }catch(e){} }
-function preset(){ var r = variants(); S.vpresets = r.list.length; S.vcount = Math.max(6, r.list.length); S.vnote = r.note; var b = Object.assign({}, r.list[S.v % r.list.length]); return Object.assign(b, periphFor(b)); }
+function load(){ try{ var s = JSON.parse(localStorage.getItem("pcil") || "null"); if(s){ ["color","type","lapUse","budget","use","level","build","bi","vary","ostore","gpuPref","cpuPref","theme","picks","mode","asm"].forEach(function(k){ if(s[k]!==undefined && s[k]!==null) S[k]=s[k]; }); S.eilat=!!s.eilat; S.abroad=!!s.abroad; S.periph=!!s.periph; S.win=!!s.win; } }catch(e){} }
+function save(){ try{ localStorage.setItem("pcil", JSON.stringify({color:S.color,type:S.type,lapUse:S.lapUse,budget:S.budget,use:S.use,level:S.level,build:S.build,eilat:S.eilat,abroad:S.abroad,bi:S.bi,vary:S.vary,ostore:S.ostore,gpuPref:S.gpuPref,cpuPref:S.cpuPref,theme:S.theme,picks:S.picks,mode:S.mode,asm:S.asm,periph:S.periph,win:S.win})); }catch(e){} }
+function preset(){ var r = variants(); S.vnote = r.note; var b = Object.assign({}, r.list[(S.bi||0) % r.list.length]); return Object.assign(b, periphFor(b)); }
 function activeKinds(){ return KINDS.filter(function(kd){ return !kd.optional || (kd.own==="win" ? S.win : S.periph); }); }
 
 function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
@@ -760,8 +799,9 @@ function chosen(k){
   var list = offers(k, p.id); if(!list.length) return null;
   var pk = S.picks[k];
   if(pk){ var hit = list.filter(function(o){ return o.key===pk; })[0]; if(hit) return hit; }
+  if(S.ostore){ var os=list.filter(function(o){ return o.store.id===S.ostore; }); if(os.length) return os[0]; }
   if(S.mode==="one"){ var one=oneStore(); if(one){ var at=list.filter(function(o){ return o.store.id===one.store.id; })[0]; if(at) return at; } }
-  if(S.v>0){ var vp=variedPick(k, list); if(vp) return vp; }
+  if(S.vary>0){ var vp=variedPick(k, list); if(vp) return vp; }
   return list[0];
 }
 // "Show me another option" also rotates brands and models inside each part, at a similar price,
@@ -773,30 +813,77 @@ function variedPick(k, list){
   if(S.color!=="any" && COLOR_KINDS.indexOf(k)>-1){ var pc=pool.filter(function(o){ return colorOf(o)===S.color; }); if(pc.length) pool=pc; }
   var off = 0; KINDS.forEach(function(kd,i){ if(kd.k===k) off=i; });
   var brands=[]; pool.forEach(function(o){ var b=brandOf(o); if(brands.indexOf(b)<0) brands.push(b); });
-  if(brands.length>1){ var b=brands[(S.v+off) % brands.length]; return pool.filter(function(o){ return brandOf(o)===b; })[0]; }
-  return pool[(S.v+off) % pool.length];
+  if(brands.length>1){ var b=brands[(S.vary+off) % brands.length]; return pool.filter(function(o){ return brandOf(o)===b; })[0]; }
+  return pool[(S.vary+off) % pool.length];
 }
-// The distinct options for the current use + level (up to 6), as variant indexes.
-function optionList(){
-  var keepV=S.v, keepB=S.build, keepP=S.picks, out=[], sigs={};
-  S.picks={};
-  for(var v=0; v<40 && out.length<6; v++){
-    S.v=v; S.build=preset();
-    var sig=activeKinds().map(function(kd){ var c=chosen(kd.k); return c ? c.key : kd.k+":"+S.build[kd.k]; }).join("|");
-    if(!sigs[sig]){ sigs[sig]=1; out.push(v); }
-  }
-  S.v=keepV; S.build=keepB; S.picks=keepP;
+// Every distinct way to buy this level: each build (presets plus same-class swaps), bought either
+// as the cheapest mix of stores (with a few brand rotations) or entirely from one store. Sorted by price.
+var OFFERS_STAMP = 0, OPT_CACHE = {key:null, list:[]};
+function optKey(){ return [S.use,S.level,S.gpuPref,S.cpuPref,S.color,S.eilat,S.abroad,S.periph,S.win,S.mode,OFFERS_STAMP].join("|"); }
+function allOptions(){
+  if(!Object.keys(OFFERS).length) return [];
+  var key = optKey(); if(OPT_CACHE.key===key) return OPT_CACHE.list;
+  var keep = {bi:S.bi, vary:S.vary, ostore:S.ostore, build:S.build, picks:S.picks};
+  var builds = variants().list, out = [], sigs = {};
+  S.picks = {};
+  try{
+    builds.forEach(function(b, bi){
+      S.bi = bi; S.build = Object.assign({}, b, periphFor(b));
+      var plans = [];
+      if(S.mode!=="one") for(var vy=0; vy<3; vy++) plans.push({vary:vy, ostore:""});
+      STORES.forEach(function(st){ if(!st.abroad || S.abroad) plans.push({vary:0, ostore:st.id}); });
+      var mix = 0;
+      plans.forEach(function(pl){
+        S.vary = pl.vary; S.ostore = pl.ostore;
+        var sum = 0, ok = true, keys = [], stores = [], gb = "";
+        activeKinds().forEach(function(kd){
+          if(!ok) return;
+          var p = part(kd.k); if(isFree(kd.k, p.id)) return;
+          var c = chosen(kd.k);
+          if(!c || (pl.ostore && c.store.id!==pl.ostore)){ ok = false; return; }
+          sum += c.price; keys.push(c.key); if(stores.indexOf(c.store.id)<0) stores.push(c.store.id);
+          if(kd.k==="gpu") gb = c.brand || String(c.model||"").split(" ")[0];
+        });
+        if(!ok || !sum) return;
+        if(!pl.ostore && !pl.vary) mix = sum;
+        var sig = keys.join("|"); if(sigs[sig]) return; sigs[sig] = 1;
+        out.push({bi:bi, vary:pl.vary, ostore:pl.ostore, sum:sum, stores:stores, extra: stores.length===1 && mix ? sum-mix : 0, cpu:b.cpu, gpu:b.gpu, gb:gb, mobo:b.mobo, ram:b.ram, ssd:b.ssd});
+      });
+    });
+  } finally { S.bi=keep.bi; S.vary=keep.vary; S.ostore=keep.ostore; S.build=keep.build; S.picks=keep.picks; }
+  out.sort(function(a,b){ return a.sum-b.sum; });
+  out = out.slice(0, 60);
+  OPT_CACHE = {key:key, list:out};
   return out;
+}
+function optPos(list){ for(var i=0;i<list.length;i++){ var o=list[i]; if(o.bi===S.bi && o.vary===S.vary && o.ostore===S.ostore) return i; } return -1; }
+function setOpt(o){ S.bi=o?o.bi:0; S.vary=o?o.vary:0; S.ostore=o?o.ostore:""; S.picks={}; S.build=preset(); S.open=null; }
+var optInit = false;
+function sameBuild(a, b){ return a && b && KINDS.every(function(kd){ return a[kd.k]===b[kd.k]; }); }
+// On the first price load, a visitor still on the default build starts at the cheapest option.
+function maybeFirstOpt(){ if(optInit) return; optInit = true; if(!S.vary && !S.ostore && !S.bi && !Object.keys(S.picks||{}).length && sameBuild(S.build, preset())) firstOpt(); }
+function firstOpt(){ setOpt(null); var l=allOptions(); if(l.length) setOpt(l[0]); }
+function shortName(k, id){ var n=BY[k+":"+id].name; return n.replace(" (Tray)","").replace(/^(AMD Radeon|NVIDIA GeForce|AMD|Intel Core|Intel)\s+/,"").replace(" 16GB",""); }
+function optTitle(o){ return shortName("cpu", o.cpu) + (o.gpu==="none" ? " · בלי כרטיס מסך" : " · " + shortName("gpu", o.gpu) + (o.gb ? " ("+o.gb+")" : "")); }
+function optSpec(o){ var m=BY["mobo:"+o.mobo].name.replace(/^לוח /,"").replace(/ \(.*\)$/,""); return "לוח "+m+" · "+BY["ram:"+o.ram].gb+"GB זיכרון · "+(BY["ssd:"+o.ssd].gb>=1000 ? BY["ssd:"+o.ssd].gb/1000+"TB" : BY["ssd:"+o.ssd].gb+"GB")+" כונן"; }
+function optStores(o){
+  if(o.stores.length===1) return '<span class="one-tag">הכל מחנות אחת</span>'+esc(STORE_BY[o.stores[0]].name)+(o.extra>0 ? ' · רק '+money(o.extra)+' יותר מקנייה בכמה חנויות' : '');
+  return esc(o.stores.length+" חנויות: "+o.stores.map(function(id){ return STORE_BY[id].name; }).join(", "));
 }
 function totalNow(){ var sum=0, missing=0; activeKinds().forEach(function(kd){ var p=part(kd.k); if(isFree(kd.k,p.id)) return; var c=chosen(kd.k); if(c) sum+=c.price; else missing++; }); return {sum:sum, missing:missing}; }
 function dateTxt(iso){ if(!iso) return ""; try{ return new Date(iso).toLocaleDateString("he-IL",{day:"numeric",month:"numeric"}); }catch(e){ return ""; } }
 function inStore(n){ return "ב" + (/^[A-Za-z0-9]/.test(n||"") ? "-" : "") + n; }
 function fromStore(n){ return "מ" + (/^[A-Za-z0-9]/.test(n||"") ? "-" : "") + n; }
 function levelPrice(lv){
-  var keep={level:S.level, v:S.v, vcount:S.vcount, vnote:S.vnote}; S.level=lv; S.v=0;
-  var b; try{ b=preset(); } finally { S.level=keep.level; S.v=keep.v; S.vcount=keep.vcount; S.vnote=keep.vnote; }
-  var sum=0, miss=0; activeKinds().forEach(function(kd){ var id=b[kd.k]; if(isFree(kd.k,id)) return; var o=offers(kd.k,id); if(o.length) sum+=o[0].price; else miss++; });
-  return miss||!sum ? 0 : sum;
+  var keepL=S.level, best=0; S.level=lv;
+  try{
+    variants().list.forEach(function(b){
+      b = Object.assign({}, b, periphFor(b));
+      var sum=0, miss=0; activeKinds().forEach(function(kd){ var id=b[kd.k]; if(isFree(kd.k,id)) return; var o=offers(kd.k,id); if(o.length) sum+=o[0].price; else miss++; });
+      if(!miss && sum && (!best || sum<best)) best=sum;
+    });
+  } finally { S.level=keepL; }
+  return best;
 }
 function roundK(n){ return Math.round(n/100)*100; }
 function safeUrl(u){ return /^https:\/\//i.test(u||"") ? u : ""; }
@@ -824,9 +911,27 @@ function renderUse(){
     ? "לגיימינג אנחנו ממליצים על מעבד AMD. מעבדי ה-X3D שלהם מובילים כרגע במשחקים, והלוח שלהם (AM5) מקבל עוד דורות של מעבדים, אז קל לשדרג בעתיד. Intel טובה לעבודה ולעריכה, ולפעמים זולה יותר במבצעים."
     : (S.use==="edit" ? "לעריכה שני היצרנים טובים. מעבד עם הרבה ליבות מקצר המתנה לייצוא, וכרטיס NVIDIA נותן יתרון בחלק מתוכנות העריכה." : "ללימודים ולעבודה שני היצרנים מצוינים. תבחרו לפי המחיר.");
   document.getElementById("reco").textContent = reco;
-  var ol = Object.keys(OFFERS).length ? optionList() : [0], n = ol.length, pos = Math.max(0, ol.indexOf(S.v));
-  document.getElementById("variant-note").textContent = (n>1 ? "אפשרות "+(pos+1)+" מתוך "+n+(pos ? ": חלקים ומותגים אחרים, באותה רמה" : ": הכי זולה ברמה הזו") : "יש אפשרות אחת בהגדרות האלה") + (S.vnote ? ". "+S.vnote : "");
+  var ol = allOptions(), n = ol.length, pos = optPos(ol), cur = pos>-1 ? ol[pos] : null, txt;
+  if(!n) txt = "";
+  else if(!cur) txt = n+" אפשרויות ברמה הזו. שיניתם חלקים, אז זו הרכבה משלכם.";
+  else txt = "אפשרות "+(pos+1)+" מתוך "+n+(pos ? "" : ", הכי זולה ברמה הזו")+". "+(cur.stores.length===1 ? "הכל "+fromStore(STORE_BY[cur.stores[0]].name)+": אחריות ושירות במקום אחד"+(cur.extra>0 ? " (רק "+money(cur.extra)+" יותר מקנייה בכמה חנויות)" : "") : "קונים ב-"+cur.stores.length+" חנויות");
+  document.getElementById("variant-note").textContent = txt + (S.vnote ? ". "+S.vnote : "");
   document.getElementById("again").hidden = n<2;
+  renderOptList(ol, pos);
+}
+function renderOptList(ol, pos){
+  var box = document.getElementById("opt-list"); box.hidden = ol.length<2;
+  if(box.hidden) return;
+  var nOne = ol.filter(function(o){ return o.stores.length===1; }).length, nStores = {};
+  ol.forEach(function(o){ o.stores.forEach(function(id){ nStores[id]=1; }); });
+  document.getElementById("opt-sum").textContent = "כל "+ol.length+" האפשרויות ברמה הזו, מהזולה ליקרה ("+Object.keys(nStores).length+" חנויות, "+nOne+" מחנות אחת)";
+  document.querySelectorAll("[data-optf]").forEach(function(b){ b.setAttribute("aria-pressed", String(b.dataset.optf===S.optf)); });
+  var items = [];
+  ol.forEach(function(o, i){
+    if(S.optf==="one" && o.stores.length!==1) return;
+    items.push('<button type="button" class="opt" data-opt="'+i+'" aria-pressed="'+(i===pos)+'"><span class="o-main"><span class="o-name">'+(i+1)+'. '+esc(optTitle(o))+'</span><span class="o-sub">'+esc(optSpec(o))+'</span><span class="o-sub">'+optStores(o)+'</span></span><b>'+money(o.sum)+'</b></button>');
+  });
+  document.getElementById("opt-items").innerHTML = items.join("") || '<p class="small" style="margin:8px 12px">אין ברמה הזו אפשרות שכל החלקים שלה נמצאים בחנות אחת.</p>';
 }
 function tagFor(kd){
   if(kd.k==="os") return '<span class="tag opt">רישיון בלבד</span>';
@@ -900,16 +1005,18 @@ function renderTotal(){
   var per={}; var t=totalNow();
   activeKinds().forEach(function(kd){ var p=part(kd.k); if(isFree(kd.k,p.id)) return; var c=chosen(kd.k); if(c){ var s=per[c.store.name]||(per[c.store.name]={n:0,sum:0}); s.n++; s.sum+=c.price; } });
   document.getElementById("total").textContent = t.sum ? money(t.sum) : "—";
-  document.getElementById("total-label").textContent = S.mode==="one" ? "סה\"כ, מחנות אחת" : "סה\"כ, הכי זול";
+  var oneNow = Object.keys(per).length===1;
+  document.getElementById("total-label").textContent = (S.mode==="one" || (S.ostore && oneNow)) ? "סה\"כ, מחנות אחת" : (S.vary||S.ostore ? "סה\"כ" : "סה\"כ, הכי זול");
   var names = Object.keys(per), note="";
   if(!t.sum) note = "עוד אין מחירים. ברגע שיהיו, הסכום והחנות הזולה לכל חלק יופיעו כאן.";
   else {
-    if(S.mode==="one"){ var one=oneStore(); note = one ? "הכל "+fromStore(one.store.name)+". קל להזמין, ואפשר לבקש מהם להרכיב." : "אין חנות אחת שיש בה את כל החלקים. הצגנו את הזול ביותר לכל חלק."; }
-    else note = names.length>1 ? "קונים ב-"+names.length+" חנויות. יותר זול, אבל כמה הזמנות." : "כל החלקים הכי זולים נמצאים "+inStore(names[0])+".";
+    if(S.mode==="one" && !S.ostore){ var one=oneStore(); note = one ? "הכל "+fromStore(one.store.name)+": אחריות אחת על כל המחשב, הזמנה אחת, ואפשר לבקש מהם להרכיב." : "אין חנות אחת שיש בה את כל החלקים. הצגנו את הזול ביותר לכל חלק."; }
+    else if(names.length===1) note = "הכל "+fromStore(names[0])+": אחריות אחת על כל המחשב, הזמנה אחת, ואפשר לבקש מהם להרכיב.";
+    else note = "קונים ב-"+names.length+" חנויות. יותר זול, אבל כמה הזמנות, וכל חלק באחריות של חנות אחרת.";
     if(S.periph) note += " כולל מסך, מקלדת ועכבר.";
     if(t.missing) note += " חסרים מחירים ל-"+t.missing+" חלקים, אז הסכום חלקי.";
   }
-  if(t.sum && S.mode!=="one" && names.length>1){ var o1=oneStore(); if(o1 && o1.sum>t.sum) note += " הכל מחנות אחת ("+o1.store.name+") יעלה עוד "+money(o1.sum-t.sum)+"."; }
+  if(t.sum && S.mode!=="one" && names.length>1){ var o1=oneStore(); if(o1 && o1.sum>t.sum) note += " הכל מחנות אחת ("+o1.store.name+") יעלה רק עוד "+money(o1.sum-t.sum)+", ויהיה פשוט יותר באחריות ובשירות."; }
   if(t.sum && S.color==="white") note += " בחרנו חלקים לבנים איפה שיש. לבן עולה לפעמים קצת יותר.";
   if(t.sum) note += S.win ? " כולל רישיון Windows (בלי התקנה). לא כולל הרכבה." : " לא כולל הרכבה ו-Windows.";
   document.getElementById("total-note").textContent = note;
@@ -1079,13 +1186,15 @@ document.addEventListener("click", function(e){
   else if(t.dataset.color){ S.color=t.dataset.color; S.picks={}; save(); renderBuild(); }
   else if(t.dataset.lapuse){ S.lapUse=t.dataset.lapuse; S.budget="all"; save(); renderReady(); }
   else if(t.dataset.budget){ S.budget=t.dataset.budget; save(); renderReady(); }
-  else if(t.dataset.use){ S.use=t.dataset.use; S.v=0; S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
-  else if(t.dataset.level){ S.level=t.dataset.level; S.v=0; S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
-  else if(t.dataset.gpupref){ S.gpuPref=t.dataset.gpupref; S.v=0; S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
-  else if(t.dataset.cpupref){ S.cpuPref=t.dataset.cpupref; S.v=0; S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
-  else if(t.dataset.mode){ S.mode=t.dataset.mode; S.picks={}; save(); renderUse(); renderParts(); renderTotal(); }
+  else if(t.dataset.use){ S.use=t.dataset.use; firstOpt(); save(); renderBuild(); }
+  else if(t.dataset.level){ S.level=t.dataset.level; firstOpt(); save(); renderBuild(); }
+  else if(t.dataset.gpupref){ S.gpuPref=t.dataset.gpupref; firstOpt(); save(); renderBuild(); }
+  else if(t.dataset.cpupref){ S.cpuPref=t.dataset.cpupref; firstOpt(); save(); renderBuild(); }
+  else if(t.dataset.mode){ S.mode=t.dataset.mode; var ml=allOptions(), mb=S.bi; setOpt(ml.filter(function(o){ return o.bi===mb; })[0] || ml[0] || null); save(); renderBuild(); }
+  else if(t.dataset.optf){ S.optf=t.dataset.optf; renderOptList(allOptions(), optPos(allOptions())); }
+  else if(t.dataset.opt){ var lo=allOptions()[Number(t.dataset.opt)]; if(lo){ setOpt(lo); save(); renderBuild(); try{ document.getElementById("parts").scrollIntoView({behavior:"smooth", block:"start"}); }catch(e){} } }
   else if(t.dataset.asm){ S.asm=t.dataset.asm; save(); renderAssembly(); }
-  else if(t.id==="again"){ var ol=optionList(), i=ol.indexOf(S.v); S.v = ol[(i+1) % ol.length]; S.picks={}; S.build=preset(); S.open=null; save(); renderBuild(); }
+  else if(t.id==="again"){ var ol=allOptions(); if(ol.length){ setOpt(ol[(optPos(ol)+1) % ol.length]); save(); renderBuild(); } }
   else if(t.id==="theme"){ S.theme = S.theme==="dark" ? "light" : "dark"; save(); applyTheme(); }
   else if(t.id==="open-glossary"){ showTab("glossary"); }
   else if(t.id==="open-about"){ showTab("about"); }
@@ -1115,7 +1224,7 @@ document.getElementById("share").addEventListener("click", async function(){
   try{
     var sid = (Date.now().toString(36)+Math.random().toString(36).slice(2,10)).replace(/[^a-z0-9]/g,"");
     var ref = db.doc("shared/"+sid);
-    await ref.set({color:S.color, build:S.build, picks:S.picks, mode:S.mode, use:S.use, level:S.level, eilat:S.eilat, periph:S.periph, asm:S.asm, createdAt:new Date().toISOString()});
+    await ref.set({color:S.color, build:S.build, picks:S.picks, mode:S.mode, ostore:S.ostore, vary:S.vary, use:S.use, level:S.level, eilat:S.eilat, periph:S.periph, asm:S.asm, createdAt:new Date().toISOString()});
     var link = ART_URL+"#b"+sid;
     copyText(link, msg, "הקישור הועתק: "+link+" (מי שמקבל צריך גישה ל-PCli)");
   }catch(err){ msg.textContent="לא הצלחתי ליצור קישור. אפשר להעתיק כטקסט."; }
@@ -1132,24 +1241,24 @@ document.getElementById("alert-save").addEventListener("click", async function()
 });
 
 function shareHash(){
-  var o={c:S.color,b:S.build,p:S.picks,m:S.mode,u:S.use,l:S.level,e:S.eilat?1:0,ph:S.periph?1:0,a:S.asm};
+  var o={c:S.color,b:S.build,p:S.picks,m:S.mode,u:S.use,l:S.level,e:S.eilat?1:0,ph:S.periph?1:0,a:S.asm,os:S.ostore,vy:S.vary};
   return "#s="+btoa(unescape(encodeURIComponent(JSON.stringify(o)))).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
 }
 function applyShared(v){
   var nb = Object.assign({}, periphFor(v.build||{}), v.build||{});
   if(!validBuild(nb)) return;
-  S.build=nb; S.picks=v.picks||{}; if(v.color) S.color=v.color; S.mode=v.mode||"cheap"; S.use=PRESETS[v.use]?v.use:S.use; S.level=(PRESETS[S.use]&&PRESETS[S.use][v.level])?v.level:S.level; S.eilat=!!v.eilat; S.periph=!!v.periph; S.asm=v.asm||S.asm;
+  S.build=nb; S.picks=v.picks||{}; if(v.color) S.color=v.color; S.mode=v.mode||"cheap"; S.use=PRESETS[v.use]?v.use:S.use; S.level=(PRESETS[S.use]&&PRESETS[S.use][v.level])?v.level:S.level; S.eilat=!!v.eilat; S.periph=!!v.periph; S.asm=v.asm||S.asm; S.ostore=(v.ostore && STORE_BY[v.ostore])?v.ostore:""; S.vary=Number(v.vary)||0;
   var bn=document.getElementById("shared-banner"); bn.hidden=false; bn.textContent="זה מחשב ששיתפו איתכם. אפשר לשנות בו כל דבר, ומה שתשנו יישמר אצלכם.";
   save(); renderBuild();
 }
 function loadStatic(){
   document.body.classList.add("static");
   var hm=(location.hash||"").match(/^#s=([A-Za-z0-9_-]+)$/);
-  if(hm){ try{ var j=JSON.parse(decodeURIComponent(escape(atob(hm[1].replace(/-/g,"+").replace(/_/g,"/"))))); applyShared({color:j.c,build:j.b,picks:j.p,mode:j.m,use:j.u,level:j.l,eilat:j.e,periph:j.ph,asm:j.a}); }catch(err){} }
+  if(hm){ try{ var j=JSON.parse(decodeURIComponent(escape(atob(hm[1].replace(/-/g,"+").replace(/_/g,"/"))))); applyShared({color:j.c,build:j.b,picks:j.p,mode:j.m,use:j.u,level:j.l,eilat:j.e,periph:j.ph,asm:j.a,ostore:j.os,vary:j.vy}); }catch(err){} }
   fetch("data/offers.json",{cache:"no-cache"}).then(function(r){ return r.json(); }).then(function(list){
-    OFFERS={};
+    OFFERS={}; OFFERS_STAMP++;
     (list||[]).forEach(function(v){ if(v && v.kind && v.cls){ (OFFERS[v.kind+":"+v.cls]=OFFERS[v.kind+":"+v.cls]||[]).push(v); } });
-    renderUse(); renderParts(); renderTotal(); renderType();
+    maybeFirstOpt(); renderUse(); renderParts(); renderChecks(); renderTotal(); renderType();
   }).catch(function(){ document.getElementById("total-note").textContent="לא הצלחנו לטעון מחירים. בדקו את החיבור לאינטרנט ונסו שוב."; });
   fetch("data/history.json",{cache:"no-cache"}).then(function(r){ return r.ok ? r.json() : {}; }).then(function(h){ HISTORY=h||{}; if(S.open) renderParts(); }).catch(function(){});
 }
@@ -1329,9 +1438,9 @@ if(S.gpuPref!=="any" || S.cpuPref!=="any") document.getElementById("more-prefs")
   db = await claude.use("db");
   if(!db) return;
   db.collection("offers").limit(1000).onSnapshot(function(snap){
-    OFFERS={};
+    OFFERS={}; OFFERS_STAMP++;
     snap.docs.forEach(function(d){ var v=d.data(); if(v && v.kind && v.cls){ var o=Object.assign({_key:d.id}, v); (OFFERS[v.kind+":"+v.cls]=OFFERS[v.kind+":"+v.cls]||[]).push(o); } });
-    renderUse(); renderParts(); renderTotal(); renderType(); if(isOwner && document.getElementById("v-admin").hidden) renderAdmin();
+    maybeFirstOpt(); renderUse(); renderParts(); renderChecks(); renderTotal(); renderType(); if(isOwner && document.getElementById("v-admin").hidden) renderAdmin();
   }, function(){});
   db.collection("history").limit(1000).onSnapshot(function(snap){
     HISTORY={};
